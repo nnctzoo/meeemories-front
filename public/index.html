@@ -2,15 +2,45 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script src="./src/jquery-3.3.1.min.js"></script>
-  <script src="./src/infinity.min.js"></script>
-  <script src="./src/contentsList.js"></script>
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+  <script src="./lib/jquery-3.3.1.min.js"></script>
+  <script src="./lib/jsrender.min.js"></script>
+  <script src="./lib/infinity.min.js"></script>
+  <script src="./lib/stimulus.umd.js"></script>
+  <script src="./src/stimulus.extensions.js"></script>
+  <script src="./src/controllers/index.js"></script>
+  <script src="./src/controllers/app.js"></script>
+  <script src="./src/controllers/media-item.js"></script>
+  <!-- <script src="./src/contentsList.js"></script> -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="./style/main.css">
   <link rel="stylesheet" type="text/css" href="./style/index.css">
 </head>
-<body>
-  <div id="header"></div>
-  <div id="content"></div>
-  <div id="footer"></div>
+<!-- なんだかinfinity.jsでリストとグリッド切り替えるのだるいなあ -->
+<body data-controller="app">
+  <div id="header">
+    <button class="fa app__view-switch" data-action="app#toggleView"></button>
+  </div>
+  <div id="content">
+    <div class="app__list" data-target="app.list"></div>
+    <div class="app__list" data-target="app.list"></div>
+    <div class="app__list" data-target="app.list"></div>
+  </div>
+  <div id="footer">
+    <button id="media">＋</button>
+    <button id="camera">カメラ</button>
+    <button id="slideshow">スライドショー</button>
+  </div>
+  <script id="media-tmpl" type="text/x-jsrender">
+    <div class="media-item" data-controller="media-item">
+      <button class="media-item__select" data-action="media-item#select"></button>
+      <picture class="media-item__picture" data-action="click->media-item#onClick">
+        {{for sources}}
+          <source media="{{:media_cond}}" srcset="{{:url}}">
+        {{/for}}
+        <img src="{{:thumnail}}">
+      </picture>
+    </div>
+  </script>
 </body>
 </html>
