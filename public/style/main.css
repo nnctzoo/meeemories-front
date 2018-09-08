@@ -61,6 +61,12 @@ body {
   overflow: hidden;
 }
 
+.app--grid-view .media-item__thumb {
+  width: 33.3vw;
+  height: 33.3vw;
+  object-fit: cover;
+}
+
 .list__infinity > div {
   height: auto !important;
 }
