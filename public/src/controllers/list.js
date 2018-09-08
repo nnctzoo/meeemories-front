@@ -6,11 +6,14 @@ Meeemories.register("list", class extends Stimulus.Controller {
     this.infinity = this.infinityTargets.map(el => new infinity.ListView($(el)));
     window.addEventListener('scroll', () => {
       this.throttle('scroll', 500, () => {
-        if (this.nextTarget.offsetTop <= window.scrollY + window.outerHeight) {
-          this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
-        }
+        this.tryDispatchNext();
       })
     })
+  }
+  tryDispatchNext() {
+    if (this.nextTarget.offsetTop <= window.scrollY + window.outerHeight && this.nextLink) {
+      this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
+    }
   }
   add(data) {
     const template = $(this.itemTemplate);
@@ -31,6 +34,9 @@ Meeemories.register("list", class extends Stimulus.Controller {
         this.infinity[0].append($(html));
       }
     }
+    setTimeout(() => {
+      this.tryDispatchNext();
+    }, 500);
   }
   addHtml(html, index = 0) {
     this.infinity[index].append(html);
