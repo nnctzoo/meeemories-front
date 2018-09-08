@@ -13,6 +13,11 @@ Stimulus.Controller.prototype.children = function (identifier) {
   const children = Array.from(this.element.querySelectorAll(`[data-controller="${identifier}"]`));
   return children.map(el => this.application.getControllerForElementAndIdentifier(el, identifier));
 }
+Stimulus.Controller.prototype.initialized = function () {
+  setTimeout(() => {
+    this.element.dispatchEvent(new CustomEvent('initialized'));
+  }, 0);
+}
 Stimulus.Controller.prototype.debounce = function (code, dt, callback) {
   this.__debounces = this.__debounces || {};
 

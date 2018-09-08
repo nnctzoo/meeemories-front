@@ -1,6 +1,6 @@
 Meeemories.register("app", class extends Stimulus.Controller {
   static get targets() {
-    return ['list']
+    return ['list', 'file', 'notification', 'notificationIndicator']
   }
   initialize() {
     this.listTarget.addEventListener('next', e => {
@@ -38,15 +38,31 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.list.nextLink = startIndex + data.length;
     })
   }
-  update() {
-    this.element.classList.toggle('app--grid-view', this.isGridView);
-    this.element.classList.toggle('app--loading', this.isLoading);
+  upload() {
+    for(let file of this.fileTarget.files) {
+      const template = document.querySelector('#uploading-tmpl').content;
+      const fragment = template.cloneNode(true);
+      fragment.firstElementChild.addEventListener('initialized', e => {
+        this.getController(e.target, 'uploading-item').start(file);
+      });
+      this.notificationTarget.appendChild(fragment);
+    }
+    this.isShowingNotification = true;
   }
   toggleView() {
     this.isGridView = !this.isGridView;
     this.list.clear();
     this.list.toggleView();
     this.load();
+  }
+  toggleNotification() {
+    this.isShowingNotification = !this.isShowingNotification;
+  }
+  update() {
+    this.element.classList.toggle('app--grid-view', this.isGridView);
+    this.element.classList.toggle('app--loading', this.isLoading);
+    this.notificationTarget.classList.toggle('app__notification--showing', this.isShowingNotification);
+    this.notificationIndicatorTarget.classList.toggle('app__notificatoion-indicator--showing', this.notificationTarget.childElementCount > 0);
   }
   get list () {
     if (!this.__list) {
@@ -66,6 +82,13 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   set isLoading(value) {
     this.data.set('is-loading', value);
+    this.update();
+  }
+  get isShowingNotification() {
+    return this.data.get('is-showing-notification') === 'true';
+  }
+  set isShowingNotification(value) {
+    this.data.set('is-showing-notification', value);
     this.update();
   }
   get selecting() {
