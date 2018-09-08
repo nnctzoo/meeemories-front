@@ -12,6 +12,7 @@
   <script src="./src/controllers/app.js"></script>
   <script src="./src/controllers/list.js"></script>
   <script src="./src/controllers/media-item.js"></script>
+  <script src="./src/controllers/uploading-item.js"></script>
   <!-- <script src="./src/contentsList.js"></script> -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="./style/main.css">
@@ -21,17 +22,22 @@
 <body data-controller="app">
   <div id="header">
     <button class="fa app__view-switch" data-action="app#toggleView"></button>
+    <button data-action="app#toggleNotification">
+      <i class="fa fa-bell"></i>
+      <span class="app__notification-indicator" data-target="app.notificationIndicator"></span>
+    </button>
+    <section class="app_notification" data-target="app.notification"></section>
   </div>
   <div id="content" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
-    <div class="list__infinity" data-target="list.infinity"></div>
-    <div class="list__infinity" data-target="list.infinity"></div>
-    <div class="list__infinity" data-target="list.infinity"></div>
+    <div class="list__container">
+      <div class="list__infinity" data-target="list.infinity"></div>
+      <div class="list__infinity" data-target="list.infinity"></div>
+      <div class="list__infinity" data-target="list.infinity"></div>
+    </div>
     <div class="list__next" data-target="list.next"></div>
   </div>
   <div id="footer">
-    <button id="media">＋</button>
-    <button id="camera">カメラ</button>
-    <button id="slideshow">スライドショー</button>
+    <label><input type="file" accept="image/*,video/*" multiple data-target="app.file" data-action="app#upload"></label>
   </div>
   <script id="media-tmpl" type="text/x-jsrender">
     <div class="media-item" data-controller="media-item">
@@ -42,6 +48,14 @@
         {{/for}}
         <img class="media-item__thumb" src="{{:thumnail}}">
       </picture>
+    </div>
+  </script>
+  <template id="uploading-tmpl">
+    <div class="uploading-item" data-controller="uploading-item">
+      <div class="uploading-item__thumb" data-target="uploading-item.thumb"></div>
+      <div class="uploading-item__message" data-target="uploading-item.message"></div>
+      <div class="uploading-item__indicator-upload"></div>
+      <div class="uploading-item__indicator-convert"></div>
     </div>
   </script>
 </body>
