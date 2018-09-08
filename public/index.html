@@ -10,6 +10,7 @@
   <script src="./src/stimulus.extensions.js"></script>
   <script src="./src/controllers/index.js"></script>
   <script src="./src/controllers/app.js"></script>
+  <script src="./src/controllers/list.js"></script>
   <script src="./src/controllers/media-item.js"></script>
   <!-- <script src="./src/contentsList.js"></script> -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -21,10 +22,11 @@
   <div id="header">
     <button class="fa app__view-switch" data-action="app#toggleView"></button>
   </div>
-  <div id="content">
-    <div class="app__list" data-target="app.list"></div>
-    <div class="app__list" data-target="app.list"></div>
-    <div class="app__list" data-target="app.list"></div>
+  <div id="content" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
+    <div class="list__infinity" data-target="list.infinity"></div>
+    <div class="list__infinity" data-target="list.infinity"></div>
+    <div class="list__infinity" data-target="list.infinity"></div>
+    <div class="list__next" data-target="list.next"></div>
   </div>
   <div id="footer">
     <button id="media">＋</button>

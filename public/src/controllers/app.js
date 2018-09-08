@@ -1,32 +1,23 @@
 Meeemories.register("app", class extends Stimulus.Controller {
   static get targets() {
-    return ["list"]
+    return ['list']
   }
   initialize() {
-    this.infinity = [
-      new infinity.ListView($(this.listTargets[0])),
-      new infinity.ListView($(this.listTargets[1])),
-      new infinity.ListView($(this.listTargets[2]))
-    ];
-    window.addEventListener('scroll', () => {
-      this.onScroll();
-    })
-    this.load();
+    this.listTarget.addEventListener('next', e => {
+      this.tryLoad(e.detail);
+    });
+    this.tryLoad();
   }
-  onScroll() {
-    if (!this.updateScheduled) {
-      this.updateScheduled = setTimeout(() => {
-        const $loader =  $("#loader");
-        const viewportBottom = $(window).scrollTop() + $(window).height();
-        if ($loader.length > 0 && $loader.offset().top <= viewportBottom) {
-          this.next();
-        }
-        this.updateScheduled = null;
-      }, 500);
+  tryLoad(url) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+      this.load(url).finally(() => {
+        this.isLoading = false;
+      })
     }
   }
   load (startIndex) {
-    startIndex = startIndex || 0;
+    startIndex = parseInt(startIndex) || 0;
     return new Promise(function(resolve) {
       const data = [];
       for(let i = startIndex, last = i + 10; i < last; i++) {
@@ -43,64 +34,39 @@ Meeemories.register("app", class extends Stimulus.Controller {
       }
       resolve(data);
     }).then((data) => {
-      this.render(data, startIndex + data.length)
+      this.list.add(data);
+      this.list.nextLink = startIndex + data.length;
     })
-  }
-  render(data, nextLink) {
-    if (this.isGridView) {
-      const len1 = this.infinity[0].pages.reduce((length, page) => length + page.items.length, 0);
-      const len2 = this.infinity[1].pages.reduce((length, page) => length + page.items.length, 0);
-      const len3 = this.infinity[2].pages.reduce((length, page) => length + page.items.length, 0);
-      const offset = len1 > len2 ? 1 : len2 > len3 ? 2 : 0;
-
-      for (var i = 0; i < data.length; i++) {
-        const datum = data[i];
-        const html = $("#media-tmpl").render(datum);
-        this.infinity[(offset + i)%3].append($(html));
-      }
-    }
-    else {
-      for(const datum of data) {
-        const html = $("#media-tmpl").render(datum);
-        this.infinity[0].append($(html));
-      }
-    }
-    this.infinity[0].append($(`<div id='loader' data-next="${nextLink}">Now Loading...</div>`));
-  }
-  next() {
-    const pages = this.infinity[0].pages;
-    const items = pages[pages.length - 1].items;
-    let startIndex = 0;
-    if (items.length > 0) {
-      const last = items[items.length - 1];
-      startIndex = +last.$el.attr("data-next");
-      last.remove();
-    }
-    this.load(startIndex);
   }
   update() {
     this.element.classList.toggle('app--grid-view', this.isGridView);
+    this.element.classList.toggle('app--loading', this.isLoading);
   }
   toggleView() {
     this.isGridView = !this.isGridView;
-    this.clear();
+    this.list.clear();
+    this.list.toggleView();
     this.load();
   }
-  clear() {
-    for(let j = 0; j < 3; j++) {
-      for(let i = this.infinity[j].pages.length - 1; i >= 0; i--) {
-        while(this.infinity[j].pages[i].items.length > 0)
-          this.infinity[j].pages[i].items.pop().remove();
-        this.infinity[j].pages.pop();
-      }
+  get list () {
+    if (!this.__list) {
+      this.__list = this.getController(this.listTarget, 'list');
     }
+    return this.__list;
   }
   get isGridView() {
     return this.data.get('is-grid-view') === 'true';
   }
   set isGridView(value) {
     this.data.set('is-grid-view', value);
-    this.update(true);
+    this.update();
+  }
+  get isLoading() {
+    return this.data.get('is-loading') === 'true';
+  }
+  set isLoading(value) {
+    this.data.set('is-loading', value);
+    this.update();
   }
   get selecting() {
     for(let item of this.children("media-item")) {

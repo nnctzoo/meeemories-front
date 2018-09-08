@@ -60,3 +60,7 @@ body {
   height: 33.3vw;
   overflow: hidden;
 }
+
+.list__infinity > div {
+  height: auto !important;
+}
