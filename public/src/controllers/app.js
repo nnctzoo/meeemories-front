@@ -11,9 +11,8 @@ Meeemories.register("app", class extends Stimulus.Controller {
   tryLoad(url) {
     if (!this.isLoading) {
       this.isLoading = true;
-      this.load(url).finally(() => {
-        this.isLoading = false;
-      })
+      const finalize = () => {this.isLoading = false;};
+      this.load(url).then(finalize, finalize);
     }
   }
   load (startIndex) {
@@ -61,6 +60,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   update() {
     this.element.classList.toggle('app--grid-view', this.isGridView);
     this.element.classList.toggle('app--loading', this.isLoading);
+    this.element.classList.toggle('app--selecting', this.isSelecting);
     this.notificationTarget.classList.toggle('app__notification--showing', this.isShowingNotification);
     this.notificationIndicatorTarget.classList.toggle('app__notificatoion-indicator--showing', this.notificationTarget.childElementCount > 0);
   }
@@ -91,7 +91,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.data.set('is-showing-notification', value);
     this.update();
   }
-  get selecting() {
+  get isSelecting() {
     for(let item of this.children("media-item")) {
       if (item.selected)
         return true;
