@@ -6,32 +6,106 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 }
 
-#header {
+.app__logo {
+  font-family: Cookie;
+  color: rgb(251, 0, 128);
+  font-size: 48px;
+  line-height: 64px;
+}
+
+.app__header {
   position: fixed;
   top:0;
   width: 100vw;
   height: 64px;
   background: white;
   z-index: 1;
+  text-align: center;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+}
+.app__header-action {
+  position: absolute;
+  top: 20px;
+  border: none;
+  background: transparent;
+}
+.app__header-action,
+.app__header-action i {
+  font-size: 24px;
+  color: gray;
 }
 #content {
   padding-top: 64px;
-  padding-bottom: 64px;
 }
-#footer {
+.app__footer {
   position: fixed;
   bottom:0;
+  z-index: 1;
   width: 100vw;
   height: 64px;
-  background: white;
-  z-index: 1;
+}
+.app__footer-action {
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+  background: rgba(128,128,128, 0.4);
+}
+@supports (-webkit-backdrop-filter: blur(10px)) {
+  .app__footer-action::before {
+    content: '';
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    position: absolute;
+    top:0;
+    left:0;
+    -webkit-backdrop-filter: blur(10px);
+    z-index: -1;
+  }
 }
 
+.app__footer-action label {
+  line-height: 68px;
+  font-size: 32px;
+  color: white;
+}
+.app__footer-action i {
+  font-size: 32px;
+}
+.app__upload {
+  bottom: 12px;
+  left: 12px;
+}
+.app__download {
+  display: none;
+  bottom: 12px;
+  right: 12px;
+}
+
+.app--selecting .app__download {
+  display: block;
+}
+
+.app__view-switch {
+  left: 12px;
+}
+.app__notification-switch {
+  right: 12px;
+}
 .app__view-switch::before {
-  content: '\f0c9';
+  /* content: '\f0c9'; */
+  content: 'view_stream';
 }
 .app--grid-view .app__view-switch::before {
-  content: '\f00a';
+  /* content: '\f00a'; */
+  content: 'view_module';
 }
 
 .app--grid-view .list__container {
@@ -43,6 +117,9 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+}
+.media-item__thumb {
+  width: 100%;
 }
 .media-item__select {
   border-radius: 50%;

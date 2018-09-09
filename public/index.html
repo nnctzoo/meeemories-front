@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css?family=Cookie|Sarina|Engagement" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="./lib/jquery-3.3.1.min.js"></script>
   <script src="./lib/jsrender.min.js"></script>
   <script src="./lib/infinity.min.js"></script>
@@ -14,16 +16,16 @@
   <script src="./src/controllers/media-item.js"></script>
   <script src="./src/controllers/uploading-item.js"></script>
   <!-- <script src="./src/contentsList.js"></script> -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="./style/main.css">
   <link rel="stylesheet" type="text/css" href="./style/index.css">
 </head>
 <!-- なんだかinfinity.jsでリストとグリッド切り替えるのだるいなあ -->
 <body data-controller="app">
-  <div id="header">
-    <button class="fa app__view-switch" data-action="app#toggleView"></button>
-    <button data-action="app#toggleNotification">
-      <i class="fa fa-bell"></i>
+  <div class="app__header">
+    <span class="app__logo">meeemories</span>
+    <button class="app__header-action app__view-switch material-icons" data-action="app#toggleView"></button>
+    <button class="app__header-action app__notification-switch " data-action="app#toggleNotification">
+      <i class="material-icons">notifications</i>
       <span class="app__notification-indicator" data-target="app.notificationIndicator"></span>
     </button>
     <section class="app_notification" data-target="app.notification"></section>
@@ -36,8 +38,19 @@
     </div>
     <div class="list__next" data-target="list.next"></div>
   </div>
-  <div id="footer">
-    <label><input type="file" accept="image/*,video/*" multiple data-target="app.file" data-action="app#upload"></label>
+  <div class="app__footer">
+    <div class="app__footer-action app__upload">
+      <div class="app__footer-action__bg"></div>
+      <label>
+        <i class="material-icons">add_photo_alternate</i>
+        <input style="display: none;" type="file" accept="image/*,video/*" multiple data-target="app.file" data-action="app#upload">
+      </label>
+    </div>
+    <div class="app__footer-action app__download">
+      <label>
+        <i class="material-icons">get_app</i>
+      </label>
+    </div>
   </div>
   <script id="media-tmpl" type="text/x-jsrender">
     <div class="media-item" data-controller="media-item">
