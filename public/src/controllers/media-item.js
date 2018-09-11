@@ -7,10 +7,10 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
   }
   select() {
     this.selected = !this.selected;
-    this.parent("app").update();
+    Meeemories.state.diff('selecting', this.selected ? 1 : -1);
   }
   onClick() {
-    if (this.parent("app").isSelecting)
+    if (Meeemories.state.get('selecting'))
       this.select();
 
     else

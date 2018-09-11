@@ -27,6 +27,9 @@ Meeemories.register("list", class extends Stimulus.Controller {
         const html = template.render(datum);
         this.infinity[(offset + i) % size].append($(html));
       }
+      setTimeout(() => {
+        this.tryDispatchNext();
+      }, 500);
     }
     else {
       for (const datum of data) {
@@ -34,9 +37,6 @@ Meeemories.register("list", class extends Stimulus.Controller {
         this.infinity[0].append($(html));
       }
     }
-    setTimeout(() => {
-      this.tryDispatchNext();
-    }, 500);
   }
   addHtml(html, index = 0) {
     this.infinity[index].append(html);
