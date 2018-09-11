@@ -1,12 +1,12 @@
 Meeemories.register("uploading-item", class extends Stimulus.Controller {
   static get targets() {
-    return ['thumb', 'message']
+    return ['thumb', 'progress']
   }
   initialize() {
     this.initialized();
+    Meeemories.state.increment('uploading-item');
   }
   start(file) {
-    console.log(file)
     this.setThumb(file);
     this.upload(file).then(data => {
       this.selfLink = "";
@@ -59,7 +59,18 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   upload(file) {
     this.status = 'uploading';
     return new Promise((resolve, reject) => {
-      resolve();
+      // ダミーアップロード
+      const __ = () => {
+        this.progress = this.progress + 1;
+        console.log(this.progress);
+        if (this.progress >= 100) {
+          resolve();
+        }
+        else {
+          setTimeout(__, 30);
+        }
+      }
+      __();
     });
   }
   watch() {
@@ -85,9 +96,8 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     }
   }
   remove() {
-    const app = this.parent('app');
     this.element.remove();
-    app.update();
+    Meeemories.state.decrement('uploading-item');
   }
   
   update() {
@@ -97,7 +107,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.element.classList.toggle("uploading-item--converting", status === 'converting');
     this.element.classList.toggle("uploading-item--succeeded", status === 'succeeded');
     this.element.classList.toggle("uploading-item--faild", status === 'faild');
-    this.messageTarget.innerText = this.status;
+    this.progressTarget.style.width = this.progress + '%';
   }
   get selfLink() {
     return this.data.get('self-link');
@@ -110,6 +120,13 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   set status(value) {
     this.data.set("status", value);
+    this.update();
+  }
+  get progress() {
+    return this.__progress || 0;
+  }
+  set progress(value) {
+    this.__progress = value;
     this.update();
   }
 });

@@ -28,7 +28,9 @@
       <i class="material-icons">notifications</i>
       <span class="app__notification-indicator" data-target="app.notificationIndicator"></span>
     </button>
-    <section class="app_notification" data-target="app.notification"></section>
+    <section class="app_notification" data-target="app.notification">
+      <p><i class="material-icons">add_photo_alternate</i>ボタンで写真を投稿しよう！</p>
+    </section>
   </div>
   <div id="content" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
     <div class="list__container">
@@ -66,9 +68,7 @@
   <template id="uploading-tmpl">
     <div class="uploading-item" data-controller="uploading-item">
       <div class="uploading-item__thumb" data-target="uploading-item.thumb"></div>
-      <div class="uploading-item__message" data-target="uploading-item.message"></div>
-      <div class="uploading-item__indicator-upload"></div>
-      <div class="uploading-item__indicator-convert"></div>
+      <div class="uploading-item__indicator" data-target="uploading-item.progress"></div>
     </div>
   </script>
 </body>

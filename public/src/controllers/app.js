@@ -7,6 +7,19 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.tryLoad(e.detail);
     });
     this.tryLoad();
+    Meeemories.state.subscribe('uploading-item', (current, old) => {
+      if (current > (old || 0)) {
+        this.isShowingNotification = true;
+      }
+      else if (current == 0) {
+        this.isShowingNotification = false;
+      }
+      this.update();
+    });
+    Meeemories.state.subscribe('selecting', () => {
+      this.update();
+    });
+    this.update();
   }
   tryLoad(url) {
     if (!this.isLoading) {
@@ -46,7 +59,6 @@ Meeemories.register("app", class extends Stimulus.Controller {
       });
       this.notificationTarget.appendChild(fragment);
     }
-    this.isShowingNotification = true;
   }
   toggleView() {
     this.isGridView = !this.isGridView;
@@ -58,11 +70,14 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.isShowingNotification = !this.isShowingNotification;
   }
   update() {
-    this.element.classList.toggle('app--grid-view', this.isGridView);
-    this.element.classList.toggle('app--loading', this.isLoading);
-    this.element.classList.toggle('app--selecting', this.isSelecting);
-    this.notificationTarget.classList.toggle('app__notification--showing', this.isShowingNotification);
-    this.notificationIndicatorTarget.classList.toggle('app__notificatoion-indicator--showing', this.notificationTarget.childElementCount > 0);
+    this.debounce('upload', 50, () => {
+      this.element.classList.toggle('app--grid-view', this.isGridView);
+      this.element.classList.toggle('app--loading', this.isLoading);
+      this.element.classList.toggle('app--selecting', this.isSelecting);
+      this.notificationTarget.classList.toggle('app__notification--empty', !this.hasUploadingItem);
+      this.notificationTarget.classList.toggle('app__notification--showing', this.isShowingNotification);
+      this.notificationIndicatorTarget.classList.toggle('app__notificatoion-indicator--showing', this.hasUploadingItem);
+    });
   }
   get list () {
     if (!this.__list) {
@@ -90,6 +105,9 @@ Meeemories.register("app", class extends Stimulus.Controller {
   set isShowingNotification(value) {
     this.data.set('is-showing-notification', value);
     this.update();
+  }
+  get hasUploadingItem() {
+    return !!this.child("uploading-item");
   }
   get isSelecting() {
     for(let item of this.children("media-item")) {
