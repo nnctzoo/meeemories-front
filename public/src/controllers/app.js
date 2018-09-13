@@ -7,7 +7,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.tryLoad(e.detail);
     });
     this.tryLoad();
-    Meeemories.state.subscribe('uploading-item', (current, old) => {
+    this.application.state.subscribe('uploading-item', (current, old) => {
       if (current > (old || 0)) {
         this.isShowingNotification = true;
       }
@@ -16,7 +16,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       }
       this.update();
     });
-    Meeemories.state.subscribe('selecting', () => {
+    this.application.state.subscribe('selecting', () => {
       this.update();
     });
     this.update();

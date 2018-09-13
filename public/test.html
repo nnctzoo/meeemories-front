@@ -1,47 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <style>
-        body {
-  background: url("https://source.unsplash.com/random") center /cover;
-  height: 100%;
-  width: 100%;
-}
-
-.con {
-  -webkit-backdrop-filter: blur(0);
-  backdrop-filter: blur(0);
-  margin: 1rem auto;
-  width: 11rem;
-  height: 11rem;
-  overflow: hidden;
-  border-radius: 50%;
-  font-size: 7rem;
-  font-weight: 300;
-  line-height: 1.5;
-  text-align: center;
-  position: relative;
-}
-.inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  -webkit-backdrop-filter: blur(0.1em);
-  backdrop-filter: blur(0.1em);
-  border-radius: 50%;
-  margin: -1px;
-}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>meeemories</title>
+  <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="./style/reset.css" rel="stylesheet" type="text/css">
+  <link href="./style/style.css" rel="stylesheet" type="text/css">
+  
 </head>
-<body>
-        <div class="con">
-                <div class="inner">KM</div>
-              </div>
+<body class="app" data-controller="app">
+  <header class="app__header">
+    <h1 class="logo" data-controller="logo">meeemories</h1>
+    <i class="app__menu-switch material-icons">more_vert</i>
+  </header>
+  <main class="app__main" data-target="app.main">
+    <section class="page" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
+      <div class="list__container">
+      </div>
+      <div class="list__next" data-target="list.next"></div>
+    </section>
+  </main>
+  <footer class="app__footer">
+    <ul class="actions">
+      <li class="actions__item">
+        <i class="icon icon__home icon--active"></i>
+      </li>
+      <li class="actions__item">
+          <i class="icon icon__add"></i>
+      </li>
+      <li class="actions__item">
+        <i class="icon icon__person"></i>
+      </li>
+    </ul>
+  </footer>
+  <button class="fab app__view-switch material-icons" data-action="app#toggleView"></button>
+  <script src="./lib/jquery-3.3.1.min.js"></script>
+  <script src="./lib/jsrender.min.js"></script>
+  <script src="./lib/infinity.min.js"></script>
+  <script src="./lib/stimulus.umd.js"></script>
+  <script src="./src/stimulus.extensions.js"></script>
+  <script src="./src/controllers/index.js"></script>
+  <script src="./src/controllers/logo.js"></script>
+  <script src="./src/controllers/list.js"></script>
+  <script src="./src/controllers/media-item.js"></script>
+  <script id="media-tmpl" type="text/x-jsrender">
+    <div  class="media-item media-item--animating" 
+          data-controller="media-item"
+          data-media-item-src={{:thumbnail.src}}
+          data-media-item-srcset="{{:thumbnail.srcset}}"
+          data-media-item-download="{{:download}}">
+      <div clas="media-item_space" style="padding-top:{{:aspect * 100}}%;"></div>
+      <img class="media-item__thumb" data-target="media-item.thumb" data-action="click->media-item#onClick">
+      <button class="media-item__select" data-action="media-item#select"></button>
+      <template>
+        <article  class="popup" 
+                  data-controller="popup"
+                  data-popup-src={{:large.src}}
+                  data-popup-srcset="{{:large.srcset}}">
+          <button class="popup__close" data-action="popup#close">&times;</button>
+          <img class="popup__image" data-target="popup.image">
+        </article>
+      </template>
+    </div>
+  </script>
+  <script>
+  infinity.config.PAGE_TO_SCREEN_RATIO = 10;
+Meeemories.register("app", class extends Stimulus.Controller {
+  static get targets() {
+    return ['main', 'list']
+  }
+  initialize() {
+    this.listTarget.addEventListener('next', e => {
+      this.tryLoad(e.detail);
+    });
+    this.tryLoad(151);
+   
+    this.application.state.subscribe('selecting', () => this.update());
+    this.update();
+    
+    this.mainTarget.addEventListener('scroll', () => this.dispatchState());
+    this.dispatchState();
+    
+  }
+  dispatchState() {
+    this.application.state.patch({scroll: this.mainTarget.scrollTop + this.mainTarget.offsetHeight});
+  }
+  tryLoad(url) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+      const finalize = () => {this.isLoading = false;};
+      this.load(url).then(finalize, finalize);
+    }
+  }
+  load (startIndex) {
+    startIndex = parseInt(startIndex) || 0;
+    return new Promise(function(resolve) {
+      const data = [];
+      for(let i = startIndex, last = i + 10; i < last; i++) {
+        data.push({
+          id: i,
+          aspect: 1200 / 800,
+          download: "https://picsum.photos/800/1200?image=" + i,
+          thumbnail: {
+            src: "https://picsum.photos/200/300?image=" + i,
+            srcset: `https://picsum.photos/200/300?image=${i} 1x, https://picsum.photos/400/600?image=${i} 2x`
+          },
+          large: {
+            src: "https://picsum.photos/400/600?image=" + i,
+            srcset: `https://picsum.photos/400/600?image=${i} 1x, https://picsum.photos/800/1200?image=${i} 2x`
+          }
+        });
+      }
+      resolve(data);
+    }).then((data) => {
+      this.list.add(data);
+      this.list.nextLink = startIndex + data.length;
+    })
+  }
+  toggleView() {
+    this.isGridView = !this.isGridView;
+    this.mainTarget.scrollTop = 0;
+  }
+  update() {
+    this.debounce('upload', 50, () => {
+      this.element.classList.toggle('app--grid-view', this.isGridView);
+      this.element.classList.toggle('app--loading', this.isLoading);
+      this.element.classList.toggle('app--selecting', this.isSelecting);
+    });
+  }
+  get list () {
+    if (!this.__list) {
+      this.__list = this.getController(this.listTarget, 'list');
+    }
+    return this.__list;
+  }
+  get isGridView() {
+    return this.data.get('is-grid-view') === 'true';
+  }
+  set isGridView(value) {
+    this.data.set('is-grid-view', value);
+    this.application.state.patch({'is-grid-view': value});
+    this.update();
+    this.listTarget.style.opacity = 0;
+    setTimeout(() => {
+      this.listTarget.style.opacity = 1;    
+    }, 100);
+  }
+  get isLoading() {
+    return this.data.get('is-loading') === 'true';
+  }
+  set isLoading(value) {
+    this.data.set('is-loading', value);
+    this.update();
+  }
+  get isSelecting() {
+    for(let item of this.children("media-item")) {
+      if (item.selected)
+        return true;
+    }
+    return false;
+  }
+});
+
+  </script>
 </body>
 </html>

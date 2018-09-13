@@ -3,52 +3,39 @@ Meeemories.register("list", class extends Stimulus.Controller {
     return ["infinity", "next"]
   }
   initialize() {
-    this.infinity = this.infinityTargets.map(el => new infinity.ListView($(el)));
-    window.addEventListener('scroll', () => {
-      this.throttle('scroll', 500, () => {
+    this.application.state.subscribe('scroll', () => {
+      this.throttle('next', 500, () => {
         this.tryDispatchNext();
       })
+      this.throttle('scroll', 500, pos => {
+        this.onScroll(pos);
+      })
     })
+    this.application.state.subscribe('is-grid-view', isGridView => {
+      this.isGridView = isGridView;
+      if (isGridView) setTimeout(() => {
+        this.tryDispatchNext();
+      }, 300)
+    });
   }
   tryDispatchNext() {
-    if (this.nextTarget.offsetTop <= window.scrollY + window.outerHeight && this.nextLink) {
+    if (this.nextTarget.offsetTop <= this.application.state.get('scroll') && this.nextLink) {
       this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
     }
   }
+  onScroll(positon) {
+
+  }
   add(data) {
     const template = $(this.itemTemplate);
-    if (this.isGridView) {
-      const size = this.infinity.length;
-      const lengthes = this.infinity.map(inf => inf.pages.reduce((length, page) => length + page.items.length, 0));
-      const offset = lengthes.reduce((total, length) => total + length, 0) % size;
-
-      for (var i = 0; i < data.length; i++) {
-        const datum = data[i];
-        const html = template.render(datum);
-        this.infinity[(offset + i) % size].append($(html));
-      }
-      setTimeout(() => {
-        this.tryDispatchNext();
-      }, 500);
+    const container = this.element.querySelector('.list__container');
+    for (const datum of data) {
+      const html = template.render(datum);
+      container.insertAdjacentHTML('beforeend', html);
     }
-    else {
-      for (const datum of data) {
-        const html = template.render(datum);
-        this.infinity[0].append($(html));
-      }
-    }
-  }
-  addHtml(html, index = 0) {
-    this.infinity[index].append(html);
-  }
-  clear() {
-    for (let j = 0; j < 3; j++) {
-      for (let i = this.infinity[j].pages.length - 1; i >= 0; i--) {
-        while (this.infinity[j].pages[i].items.length > 0)
-          this.infinity[j].pages[i].items.pop().remove();
-        this.infinity[j].pages.pop();
-      }
-    }
+    setTimeout(() => {
+     this.tryDispatchNext();
+    }, 500);
   }
   update() {
     this.element.classList.toggle('list--grid-view', this.isGridView);
