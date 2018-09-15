@@ -1,14 +1,11 @@
 Meeemories.register("list", class extends Stimulus.Controller {
   static get targets() {
-    return ["infinity", "next"]
+    return ["container", "item", "next"]
   }
   initialize() {
-    this.application.state.subscribe('scroll', () => {
+    this.application.state.subscribe('scroll', (current, old) => {
       this.throttle('next', 500, () => {
         this.tryDispatchNext();
-      })
-      this.throttle('scroll', 500, pos => {
-        this.onScroll(pos);
       })
     })
     this.application.state.subscribe('is-grid-view', isGridView => {
@@ -19,23 +16,22 @@ Meeemories.register("list", class extends Stimulus.Controller {
     });
   }
   tryDispatchNext() {
-    if (this.nextTarget.offsetTop <= this.application.state.get('scroll') && this.nextLink) {
+    const isBottom = this.nextTarget.offsetTop <= this.application.state.get('scroll') + 600;
+    if (isBottom && this.nextLink) {
       this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
     }
   }
-  onScroll(positon) {
-
+  prepend(data) {
   }
-  add(data) {
+  append(data) {
     const template = $(this.itemTemplate);
-    const container = this.element.querySelector('.list__container');
     for (const datum of data) {
       const html = template.render(datum);
-      container.insertAdjacentHTML('beforeend', html);
+      this.containerTarget.insertAdjacentHTML('beforeend', html);
     }
     setTimeout(() => {
-     this.tryDispatchNext();
-    }, 500);
+      this.tryDispatchNext();
+     }, 500);
   }
   update() {
     this.element.classList.toggle('list--grid-view', this.isGridView);
@@ -48,7 +44,7 @@ Meeemories.register("list", class extends Stimulus.Controller {
   }
   set isGridView(value) {
     this.data.set('is-grid-view', value);
-    this.update(true);
+    this.update();
   }
   get itemTemplate() {
     return this.data.get('item-template');
