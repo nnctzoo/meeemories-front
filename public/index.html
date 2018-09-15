@@ -17,10 +17,12 @@
     <i class="app__menu-switch material-icons">more_vert</i>
   </header>
   <main class="app__main" data-target="app.main">
-    <section class="page" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
-      <div class="list__container" data-target="list.container">
-      </div>
+    <section id="home" class="page page--active" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
+      <div class="list__container" data-target="list.container"></div>
       <div class="list__next" data-target="list.next"></div>
+    </section>
+    <section id="mypage" class="page" >
+
     </section>
   </main>
   <footer class="app__footer">
@@ -46,6 +48,7 @@
   <script src="./src/controllers/logo.js"></script>
   <script src="./src/controllers/list.js"></script>
   <script src="./src/controllers/media-item.js"></script>
+  <script src="./src/controllers/popup.js"></script>
   <script id="media-tmpl" type="text/x-jsrender">
     <div  class="media-item media-item--animating" 
           data-target="list.item"
@@ -59,12 +62,14 @@
       <img class="media-item__thumb" data-target="media-item.thumb" data-action="click->media-item#onClick">
       <!-- <img class="media-item__cover" src="{{:tiny}}" data-action="click->media-item#onClick"> -->
       <button class="media-item__select" data-action="media-item#select"></button>
-      <template>
+      <template data-target="media-item.template">
         <article  class="popup" 
                   data-controller="popup"
                   data-popup-src={{:large.src}}
                   data-popup-srcset="{{:large.srcset}}">
-          <button class="popup__close" data-action="popup#close">&times;</button>
+          <button class="popup__close" data-action="popup#close">
+            <i class="material-icons">arrow_back</i>
+          </button>
           <img class="popup__image" data-target="popup.image">
         </article>
       </template>

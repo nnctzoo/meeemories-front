@@ -289,3 +289,63 @@ body::before {
 .app--grid-view .app__view-switch::before {
   content: 'view_module';
 }
+
+.page {
+  position: absolute;
+  display: none;
+}
+.page--active {
+  display: block;
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:black;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  justify-content: stretch;
+}
+.popup__close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: white;
+  background: none;
+  border: none;
+}
+
+.popup::before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -12px;
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 50%;
+  border: 12px solid black;
+  animation: popup-load 1s linear infinite alternate;
+  z-index: -1;
+}
+.popup--loaded::before {
+  display: none;
+}
+@keyframes popup-load {
+  0% {
+    border-width: 12px;
+  }
+  100% {
+    border-width: 0;
+  }
+}

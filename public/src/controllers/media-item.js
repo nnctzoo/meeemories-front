@@ -1,6 +1,6 @@
 Meeemories.register("media-item", class extends Stimulus.Controller {
   static get targets() {
-    return ['thumb']
+    return ['thumb', 'template']
   }
   initialize() {
     this.application.state.subscribe('scroll', pos => {
@@ -48,7 +48,8 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
     window.requestAnimationFrame(step);
   }
   show() {
-    alert("show!!!")
+    const clone = this.templateTarget.content.cloneNode(true);
+    document.body.appendChild(clone);
   }
   select() {
     this.selected = !this.selected;
