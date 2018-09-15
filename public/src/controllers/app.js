@@ -1,6 +1,6 @@
 Meeemories.register("app", class extends Stimulus.Controller {
   static get targets() {
-    return ['main', 'list']
+    return ['main', 'list', 'mines', 'file']
   }
   initialize() {
     this.listTarget.addEventListener('next', e => {
@@ -13,7 +13,8 @@ Meeemories.register("app", class extends Stimulus.Controller {
     
     this.mainTarget.addEventListener('scroll', () => this.dispatchState());
     this.dispatchState();
-    
+
+    this.move(window.location.hash);
   }
   dispatchState() {
     this.application.state.patch({scroll: this.mainTarget.scrollTop + this.mainTarget.offsetHeight});
@@ -62,6 +63,32 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.element.classList.toggle('app--loading', this.isLoading);
       this.element.classList.toggle('app--selecting', this.isSelecting);
     });
+  }
+  move(page) {
+    const target = document.querySelector(page) || document.querySelector('.page');
+    if (!target.classList.contains('page--active')) {
+      document.querySelector('.page--active').classList.remove('page--active');
+      document.querySelector('.icon--active').classList.remove('icon--active');
+      target.classList.add('page--active');
+      document.querySelector('[data-to="' + page + '"] .icon').classList.add('icon--active');
+    }
+  }
+  go(e) {
+    const hash = e.target.closest('.actions__item').dataset.to;
+    this.move(hash);
+    window.history.replaceState(null,null,hash);
+    return false;
+  }
+  upload() {
+    for(let file of this.fileTarget.files) {
+      const template = document.querySelector('#uploading-tmpl').content;
+      const fragment = template.cloneNode(true);
+      fragment.firstElementChild.addEventListener('initialized', e => {
+        this.getController(e.target, 'uploading-item').start(file);
+      });
+      this.minesTarget.appendChild(fragment);
+    }
+    this.move('#mypage');
   }
   get list () {
     if (!this.__list) {

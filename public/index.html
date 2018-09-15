@@ -20,25 +20,27 @@
     <section id="home" class="page page--active" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
       <div class="list__container" data-target="list.container"></div>
       <div class="list__next" data-target="list.next"></div>
+      <button class="fab app__view-switch material-icons" data-action="app#toggleView"></button>
     </section>
-    <section id="mypage" class="page" >
-
+    <section id="mypage" class="page" data-target="app.mines">
     </section>
   </main>
   <footer class="app__footer">
     <ul class="actions">
-      <li class="actions__item">
+      <li class="actions__item" data-action="click->app#go" data-to="#home">
         <i class="icon icon__home icon--active"></i>
       </li>
       <li class="actions__item">
+        <label>
           <i class="icon icon__add"></i>
+          <input type="file" style="display: none;" multiple data-target="app.file" data-action="app#upload">
+        </label>
       </li>
-      <li class="actions__item">
+      <li class="actions__item" data-action="click->app#go" data-to="#mypage">
         <i class="icon icon__person"></i>
       </li>
     </ul>
   </footer>
-  <button class="fab app__view-switch material-icons" data-action="app#toggleView"></button>
   <script src="./lib/jquery-3.3.1.min.js"></script>
   <script src="./lib/jsrender.min.js"></script>
   <script src="./lib/stimulus.umd.js"></script>
@@ -49,6 +51,7 @@
   <script src="./src/controllers/list.js"></script>
   <script src="./src/controllers/media-item.js"></script>
   <script src="./src/controllers/popup.js"></script>
+  <script src="./src/controllers/uploading-item.js"></script>
   <script id="media-tmpl" type="text/x-jsrender">
     <div  class="media-item media-item--animating" 
           data-target="list.item"
@@ -70,10 +73,18 @@
           <button class="popup__close" data-action="popup#close">
             <i class="material-icons">arrow_back</i>
           </button>
+          <img class="popup__image" src="{{:thumbnail.src}}" srcset="{{:thumbnail.srcset}}">
           <img class="popup__image" data-target="popup.image">
         </article>
       </template>
     </div>
   </script>
+  <template id="uploading-tmpl">
+      <div class="uploading-item" data-controller="uploading-item">
+        <div class="uploading-item__thumb" data-target="uploading-item.thumb"></div>
+        <div class="uploading-item__indicator" data-target="uploading-item.progress"></div>
+        <button class="uploading-item__remove" data-target="uploading-item.remove"><i class="material-icons">delete</i></button>
+      </div>
+  </template>
 </body>
 </html>

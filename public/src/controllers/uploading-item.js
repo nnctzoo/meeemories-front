@@ -4,7 +4,6 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   initialize() {
     this.initialized();
-    Meeemories.state.increment('uploading-item');
   }
   start(file) {
     this.setThumb(file);
@@ -96,10 +95,9 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     }
   }
   remove() {
-    this.element.remove();
-    Meeemories.state.decrement('uploading-item');
+    // this.element.remove();
+    // Meeemories.state.decrement('uploading-item');
   }
-  
   update() {
     const status = this.status;
     this.element.classList.toggle("uploading-item--uploading", status === 'uploading');
