@@ -65,7 +65,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     });
   }
   move(page) {
-    const target = document.querySelector(page) || document.querySelector('.page');
+    const target = page ? document.querySelector(page) || document.querySelector('.page') : document.querySelector('.page');
     if (!target.classList.contains('page--active')) {
       document.querySelector('.page--active').classList.remove('page--active');
       document.querySelector('.icon--active').classList.remove('icon--active');
@@ -86,7 +86,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       fragment.firstElementChild.addEventListener('initialized', e => {
         this.getController(e.target, 'uploading-item').start(file);
       });
-      this.minesTarget.appendChild(fragment);
+      this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
     this.move('#mypage');
   }

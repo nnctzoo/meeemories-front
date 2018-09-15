@@ -61,7 +61,6 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       // ダミーアップロード
       const __ = () => {
         this.progress = this.progress + 1;
-        console.log(this.progress);
         if (this.progress >= 100) {
           resolve();
         }
@@ -88,14 +87,14 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     }
 
     if (this.status == 'succeeded') {
-      setTimeout(() => { this.remove(); }, 3000);
+      // setTimeout(() => { this.remove(); }, 3000);
     }
     else {
       setTimeout(() => { this.watch(); }, 3000);
     }
   }
   remove() {
-    // this.element.remove();
+    this.element.remove();
     // Meeemories.state.decrement('uploading-item');
   }
   update() {

@@ -22,7 +22,7 @@
       <div class="list__next" data-target="list.next"></div>
       <button class="fab app__view-switch material-icons" data-action="app#toggleView"></button>
     </section>
-    <section id="mypage" class="page" data-target="app.mines">
+    <section id="mypage" class="page" data-target="app.mines" data-message="Android端末やご使用ブラウザによっては複数アップロードがご利用できません">
     </section>
   </main>
   <footer class="app__footer">
@@ -33,7 +33,7 @@
       <li class="actions__item">
         <label>
           <i class="icon icon__add"></i>
-          <input type="file" style="display: none;" multiple data-target="app.file" data-action="app#upload">
+          <input type="file" name="files[]" accept="image/*,video/*" multiple="multiple" data-target="app.file" data-action="change->app#upload">
         </label>
       </li>
       <li class="actions__item" data-action="click->app#go" data-to="#mypage">
@@ -82,8 +82,13 @@
   <template id="uploading-tmpl">
       <div class="uploading-item" data-controller="uploading-item">
         <div class="uploading-item__thumb" data-target="uploading-item.thumb"></div>
+        <ul class="uploading-item__breadcrumb">
+          <li><span>アップロード</span></li>
+          <li><span>最適化</span></li>
+          <li><span>投稿完了</span></li>
+        </ul>
         <div class="uploading-item__indicator" data-target="uploading-item.progress"></div>
-        <button class="uploading-item__remove" data-target="uploading-item.remove"><i class="material-icons">delete</i></button>
+        <button class="uploading-item__remove" data-action="uploading-item#remove"><i class="material-icons">delete</i></button>
       </div>
   </template>
 </body>
