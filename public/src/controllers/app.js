@@ -11,13 +11,13 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.application.state.subscribe('selecting', () => this.update());
     this.update();
     
-    this.mainTarget.addEventListener('scroll', () => this.dispatchState());
+    window.addEventListener('scroll', () => this.dispatchState());
     this.dispatchState();
 
     this.move(window.location.hash);
   }
   dispatchState() {
-    this.application.state.patch({scroll: this.mainTarget.scrollTop + this.mainTarget.offsetHeight});
+    this.application.state.patch({scroll: window.scrollY + window.outerHeight});
   }
   tryLoad(url) {
     if (!this.isLoading) {
@@ -80,7 +80,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     return false;
   }
   upload() {
-    for(let file of this.fileTarget.files) {
+    for(let file of Array.from(this.fileTarget.files)) {
       const template = document.querySelector('#uploading-tmpl').content;
       const fragment = template.cloneNode(true);
       fragment.firstElementChild.addEventListener('initialized', e => {

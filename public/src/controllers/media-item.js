@@ -14,7 +14,7 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
     this.tryVisualize(this.application.state.get('scroll'));
 
     this.thumbTarget.addEventListener('load', () => {
-      this.animation();
+      //this.animation();
       this.loaded = true;
     });
   }

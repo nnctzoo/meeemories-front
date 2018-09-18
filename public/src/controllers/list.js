@@ -16,8 +16,9 @@ Meeemories.register("list", class extends Stimulus.Controller {
     });
   }
   tryDispatchNext() {
+    const isDisplay = !!this.nextTarget.offsetParent;
     const isBottom = this.nextTarget.offsetTop <= this.application.state.get('scroll') + 600;
-    if (isBottom && this.nextLink) {
+    if (isDisplay && isBottom && this.nextLink) {
       this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
     }
   }
