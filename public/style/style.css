@@ -241,7 +241,6 @@ body {
   position: fixed;
   width: 48px;
   height: 48px;
-  line-height: 48px;
   border-radius: 50%;
   border: 2px solid white;
   box-sizing: border-box;
@@ -257,10 +256,11 @@ body {
     display: block;
     width: 48px;
     height: 48px;
+    line-height: 48px;
     border-radius: 50%;
     position: absolute;
-    top:0;
-    left:0;
+    top:-2px;
+    left:-2px;
     -webkit-backdrop-filter: blur(10px);
     z-index: -1;
   }
