@@ -283,10 +283,10 @@ body::-webkit-scrollbar {
   }
 }
 .app__view-switch::before {
-  content: 'view_stream';
+  content: 'view_module';
 }
 .app--grid-view .app__view-switch::before {
-  content: 'view_module';
+  content: 'view_stream';
 }
 
 .page {
