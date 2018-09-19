@@ -305,6 +305,7 @@ body::-webkit-scrollbar {
   width: 80%;
   margin: 0 auto;
   display: block;
+  text-align: center;
 }
 .page--active {
   display: block;
@@ -314,7 +315,7 @@ body::-webkit-scrollbar {
   /* animation: left-in 0.25s linear forwards; */
 }
 #mypage.page--active  {
-  animation: right-in 0.25s linear forwards;
+  animation: right-in 0.25s linear;
 }
 @keyframes left-in {
   0% {
@@ -328,11 +329,11 @@ body::-webkit-scrollbar {
 }
 @keyframes right-in {
   0% {
-    left:10vw;
+    left:50vw;
     opacity: 0;
   }
   100% {
-    left:0;
+    left:25vw;
     opacity: 1;
   }
 }
