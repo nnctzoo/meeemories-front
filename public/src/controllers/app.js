@@ -40,11 +40,13 @@ Meeemories.register("app", class extends Stimulus.Controller {
               tiny:"https://picsum.photos/20/30?image=" + i,
               thumbnail: {
                 src: "https://picsum.photos/200/300?image=" + i,
-                srcset: `https://picsum.photos/200/300?image=${i} 1x, https://picsum.photos/400/600?image=${i} 2x`
+                srcset: `https://picsum.photos/200/300?image=${i} 200w, https://picsum.photos/400/600?image=${i} 400w, https://picsum.photos/800/1200?image=${i} 800w`,
+                sizes: "(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px"
               },
               large: {
                 src: "https://picsum.photos/400/600?image=" + i,
-                srcset: `https://picsum.photos/400/600?image=${i} 1x, https://picsum.photos/800/1200?image=${i} 2x`
+                srcset: `https://picsum.photos/400/600?image=${i} 1x, https://picsum.photos/800/1200?image=${i} 2x`,
+                sizes: ""
               }
             }));
       resolve(data);

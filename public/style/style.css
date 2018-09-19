@@ -8,6 +8,9 @@ html, body {
 body {
   background: rgb(250,232,226);
 }
+body::-webkit-scrollbar {
+  display: none;
+}
 .logo {
   font-family: Cookie;
   font-size: 36px;
@@ -51,6 +54,8 @@ body {
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   height: 100%;
 }
 .actions__item {
@@ -110,11 +115,10 @@ body {
 .app__main {
   padding-top:48px;
   display: flex;
-  width: 100vw;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   overflow-x: hidden;
-}
-.app__main::-webkit-scrollbar {
-  display: none;
 }
 
 .list--grid-view .list__container {
@@ -133,7 +137,7 @@ body {
   position: relative;
   overflow: hidden;
   margin: 16px auto;
-  width: calc(100vw - 2 * 32px);
+  width: calc(100% - 2 * 32px);
   border-radius: 4px;
   box-sizing: border-box;
   box-shadow: 0 0 20px 0 gray;
@@ -220,7 +224,9 @@ body {
 
 .app--grid-view .media-item {
   width: calc((100vw - 4 * 4px) / 3);
+  max-width: calc((960px - 4 * 4px) / 3);
   height: calc((100vw - 4 * 4px) / 3);
+  max-height: calc((960px - 4 * 4px) / 3);
 }
 
 .app--grid-view .media-item__select {
@@ -231,8 +237,10 @@ body {
 }
 
 .app--grid-view .media-item__thumb {
-  width: 33.3vw;
-  height: 33.3vw;
+  width: calc((100vw - 4 * 4px) / 3);
+  max-width: calc((960px - 4 * 4px) / 3);
+  height: calc((100vw - 4 * 4px) / 3);
+  max-height: calc((960px - 4 * 4px) / 3);
   object-fit: cover;
 }
 
@@ -269,6 +277,11 @@ body {
   top: 96px;
   right: 8px;
 }
+@media screen and (min-width: 960px) {
+  .app__view-switch {
+    right: calc((100vw - 960px) / 2 + 8px) ;
+  }
+}
 .app__view-switch::before {
   content: 'view_stream';
 }
@@ -280,6 +293,8 @@ body {
   position: absolute;
   overflow: hidden;
   width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   min-height: 90%;
   display: none;
 }

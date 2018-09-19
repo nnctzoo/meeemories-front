@@ -24,6 +24,7 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
       this.visibled = true;
       if (!this.thumbTarget.srcset && !this.thumbTarget.src) {
         this.thumbTarget.srcset = this.srcset;
+        this.thumbTarget.sizes = this.sizes;
         this.thumbTarget.src = this.src;
       }
     }
@@ -101,6 +102,9 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
   }
   get srcset() {
     return this.data.get('srcset');
+  }
+  get sizes() {
+    return this.data.get('sizes');
   }
   get download() {
     return this.data.get('download');
