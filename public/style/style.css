@@ -215,10 +215,10 @@ body::-webkit-scrollbar {
   border-color: #fff;
 }
 .media-item--selected  {
-  border: 4px solid #f78fb3;
+  border: 4px solid #EA6264;
 }
 .media-item--selected .media-item__select {
-  background: rgba(251, 0, 128, 0.75);
+  background: #EA6264;
   border-color: #fff;
 }
 
