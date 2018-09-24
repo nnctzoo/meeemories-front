@@ -1,54 +1,40 @@
 Meeemories.register("list", class extends Stimulus.Controller {
   static get targets() {
-    return ["infinity", "next"]
+    return ["container", "item", "next"]
   }
   initialize() {
-    this.infinity = this.infinityTargets.map(el => new infinity.ListView($(el)));
-    window.addEventListener('scroll', () => {
-      this.throttle('scroll', 500, () => {
+    this.application.state.subscribe('scroll', (current, old) => {
+      this.throttle('next', 500, () => {
         this.tryDispatchNext();
       })
     })
+    this.application.state.subscribe('is-grid-view', isGridView => {
+      this.isGridView = isGridView;
+      if (isGridView) setTimeout(() => {
+        this.tryDispatchNext();
+      }, 300)
+    });
   }
   tryDispatchNext() {
-    if (this.nextTarget.offsetTop <= window.scrollY + window.outerHeight && this.nextLink) {
+    const isDisplay = !!this.nextTarget.offsetParent;
+    const bottom = this.element.offsetTop + this.element.offsetHeight;
+    const isBottom = bottom - this.application.state.get('scroll') < window.innerHeight;
+    document.getElementById('debug').innerText = `H=${window.innerHeight}, isDisplay=${isDisplay}, isBottom=${isBottom}, nexeLink=${this.nextLink}, bottom=${bottom}, scroll=${this.application.state.get('scroll')}`;
+    if (isDisplay && isBottom && this.nextLink) {
       this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
     }
   }
-  add(data) {
+  prepend(data) {
+  }
+  append(data) {
     const template = $(this.itemTemplate);
-    if (this.isGridView) {
-      const size = this.infinity.length;
-      const lengthes = this.infinity.map(inf => inf.pages.reduce((length, page) => length + page.items.length, 0));
-      const offset = lengthes.reduce((total, length) => total + length, 0) % size;
-
-      for (var i = 0; i < data.length; i++) {
-        const datum = data[i];
-        const html = template.render(datum);
-        this.infinity[(offset + i) % size].append($(html));
-      }
-      setTimeout(() => {
-        this.tryDispatchNext();
-      }, 500);
+    for (const datum of data) {
+      const html = template.render(datum);
+      this.containerTarget.insertAdjacentHTML('beforeend', html);
     }
-    else {
-      for (const datum of data) {
-        const html = template.render(datum);
-        this.infinity[0].append($(html));
-      }
-    }
-  }
-  addHtml(html, index = 0) {
-    this.infinity[index].append(html);
-  }
-  clear() {
-    for (let j = 0; j < 3; j++) {
-      for (let i = this.infinity[j].pages.length - 1; i >= 0; i--) {
-        while (this.infinity[j].pages[i].items.length > 0)
-          this.infinity[j].pages[i].items.pop().remove();
-        this.infinity[j].pages.pop();
-      }
-    }
+    setTimeout(() => {
+      this.tryDispatchNext();
+     }, 500);
   }
   update() {
     this.element.classList.toggle('list--grid-view', this.isGridView);
@@ -61,7 +47,7 @@ Meeemories.register("list", class extends Stimulus.Controller {
   }
   set isGridView(value) {
     this.data.set('is-grid-view', value);
-    this.update(true);
+    this.update();
   }
   get itemTemplate() {
     return this.data.get('item-template');

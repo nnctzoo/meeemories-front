@@ -37,4 +37,8 @@ window.Meeemories = Stimulus.Application.start();
     }
   }
   app.state = new State();
+  if (window.navigator && window.navigator.userAgent) {
+    app.state.patch({ios: this.navigator.userAgent.indexOf('iPhone') > 0 || this.navigator.userAgent.indexOf('iPad') > 0 });
+    app.state.patch({android: this.navigator.userAgent.indexOf('Android') > 0});
+  }
 }(window.Meeemories))

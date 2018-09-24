@@ -30,8 +30,8 @@ Stimulus.Controller.prototype.throttle = function (code, dt, callback) {
   this.__throttles = this.__throttles || {};
 
   if (!this.__throttles[code]) {
+    callback();
     this.__throttles[code] = setTimeout(() => {
-      callback();
       this.__throttles[code] = null;
     }, dt);
   }

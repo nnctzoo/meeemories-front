@@ -4,7 +4,6 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   initialize() {
     this.initialized();
-    Meeemories.state.increment('uploading-item');
   }
   start(file) {
     this.setThumb(file);
@@ -62,7 +61,6 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       // ダミーアップロード
       const __ = () => {
         this.progress = this.progress + 1;
-        console.log(this.progress);
         if (this.progress >= 100) {
           resolve();
         }
@@ -89,7 +87,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     }
 
     if (this.status == 'succeeded') {
-      setTimeout(() => { this.remove(); }, 3000);
+      // setTimeout(() => { this.remove(); }, 3000);
     }
     else {
       setTimeout(() => { this.watch(); }, 3000);
@@ -97,9 +95,8 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   remove() {
     this.element.remove();
-    Meeemories.state.decrement('uploading-item');
+    // Meeemories.state.decrement('uploading-item');
   }
-  
   update() {
     const status = this.status;
     this.element.classList.toggle("uploading-item--uploading", status === 'uploading');
