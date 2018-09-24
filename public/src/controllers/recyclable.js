@@ -14,7 +14,7 @@ Meeemories.register("recyclable", class extends Stimulus.Controller {
   onScroll(current, old) {
     old = old || current;
     const viewportBottom = current;
-    const viewportTop = viewportBottom - window.outerHeight;
+    const viewportTop = viewportBottom - window.innerHeight;
     const items = this.itemTargets.reverse();
     items.forEach(el => {
       const elTop = el.offsetTop;

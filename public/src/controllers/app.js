@@ -17,7 +17,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.move(window.location.hash);
   }
   dispatchState() {
-    this.application.state.patch({scroll: window.scrollY + window.outerHeight});
+    this.application.state.patch({scroll: window.scrollY + window.innerHeight});
   }
   tryLoad(url) {
     if (!this.isLoading) {
@@ -28,7 +28,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   load (startIndex) {
     startIndex = parseInt(startIndex) || 0;
-    return new Promise(function(resolve) {
+    return new Promise(resolve => {
       const data = [];
       Array
           .from(Array(10), (v, k) => startIndex + k)
@@ -40,7 +40,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
               tiny:"https://picsum.photos/20/30?image=" + i,
               thumbnail: {
                 src: "https://picsum.photos/200/300?image=" + i,
-                srcset: `https://picsum.photos/200/300?image=${i} 200w, https://picsum.photos/400/600?image=${i} 400w, https://picsum.photos/800/1200?image=${i} 800w`,
+                srcset: `https://picsum.photos/200/300?image=${i} 200w, https://picsum.photos/400/600?image=${i} 400w` + (this.application.state.get('ios') ? '' :`, https://picsum.photos/800/1200?image=${i} 800w`),
                 sizes: "(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px"
               },
               large: {

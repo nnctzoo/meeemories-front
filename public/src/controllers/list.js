@@ -17,7 +17,9 @@ Meeemories.register("list", class extends Stimulus.Controller {
   }
   tryDispatchNext() {
     const isDisplay = !!this.nextTarget.offsetParent;
-    const isBottom = this.nextTarget.offsetTop <= this.application.state.get('scroll') + 600;
+    const bottom = this.element.offsetTop + this.element.offsetHeight;
+    const isBottom = bottom - this.application.state.get('scroll') < window.innerHeight;
+    document.getElementById('debug').innerText = `H=${window.innerHeight}, isDisplay=${isDisplay}, isBottom=${isBottom}, nexeLink=${this.nextLink}, bottom=${bottom}, scroll=${this.application.state.get('scroll')}`;
     if (isDisplay && isBottom && this.nextLink) {
       this.element.dispatchEvent(new CustomEvent('next', { detail: this.nextLink }));
     }

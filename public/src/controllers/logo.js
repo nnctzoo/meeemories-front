@@ -4,7 +4,7 @@ Meeemories.register("logo", class extends Stimulus.Controller {
     }
     initialize() {
       this.application.state.subscribe('scroll', bottom => {
-        this.hidden = (bottom - window.outerHeight) > 10;
+        this.hidden = (bottom - window.innerHeight) > 10;
       });
     }
     update() {

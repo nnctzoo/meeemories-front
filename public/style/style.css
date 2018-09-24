@@ -185,10 +185,12 @@ body::-webkit-scrollbar {
 }
 .media-item__cover{
   position: absolute;
-  top:-10px;
-  left:-10px;
-  width: calc(100% + 20px);
-  height: calc(100% + 20px);
+  top:0;
+  left:0;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  margin-top: -5px;
+  margin-left: -5px;
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
@@ -209,6 +211,7 @@ body::-webkit-scrollbar {
   border: 2px solid transparent;
   background: rgba(160, 160, 160, 0.4);
   transition: all linear .15s;
+  font-size: 0;
 }
 .media-item:hover .media-item__select,
 .media-item__select:active {
@@ -247,6 +250,8 @@ body::-webkit-scrollbar {
 .fab {
   display: block;
   position: fixed;
+  min-width: 0 !important;
+  min-height: 0 !important;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -257,6 +262,12 @@ body::-webkit-scrollbar {
   background: rgba(128,128,128, 0.4);
   z-index: 100;
   color: white;
+}
+.fab.material-icons {
+  font-size: 0;
+}
+.fab::before {
+  font-size: 24px;
 }
 @supports (-webkit-backdrop-filter: blur(10px)) {
   .fab::before {
@@ -491,4 +502,12 @@ input[type="file"] {
   width: 0;
   height: 0;
   opacity: 0;
+}
+
+#debug {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 9999;
 }

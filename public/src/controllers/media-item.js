@@ -19,8 +19,14 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
     });
   }
   tryVisualize(pos) {
-    const threshold = pos;
-    if (this.element.offsetTop <= threshold) {
+    const viewportTop = pos - window.innerHeight;
+    const viewportBottom = pos;
+    const mediaTop = this.element.offsetTop;
+    const mediaBottom = mediaTop + this.element.offsetHeight;
+
+    if (mediaTop <= viewportBottom 
+     // && mediaBottom >= viewportTop
+    ) {
       this.visibled = true;
       if (!this.thumbTarget.srcset && !this.thumbTarget.src) {
         this.thumbTarget.srcset = this.srcset;
@@ -28,6 +34,14 @@ Meeemories.register("media-item", class extends Stimulus.Controller {
         this.thumbTarget.src = this.src;
       }
     }
+    // else {
+    //   this.visibled = false;
+    //   if (this.thumbTarget.hasAttribute('src')) {
+    //     this.thumbTarget.removeAttribute('src');
+    //     this.thumbTarget.removeAttribute('sizes');
+    //     this.thumbTarget.removeAttribute('srcset');
+    //   }
+    // }
   }
   animation() {
     const size = Math.max(this.element.clientWidth, this.element.clientHeight) * 3;
