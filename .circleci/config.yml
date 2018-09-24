@@ -13,4 +13,4 @@ jobs:
       - run: aws s3 sync public s3://www.meeemori.es
 
       # cache clear aws cf
-      - run: aws cloudfront create-invalidation --distribution-id E2BB1AQ52WB97Z --paths /*
+      - run: aws cloudfront create-invalidation --distribution-id E2BB1AQ52WB97Z --paths '/*'
