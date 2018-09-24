@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: iwate/node-awscli
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # copy to aws s3
+      - run: aws s3 sync public s3://www.meeemori.es
+
+      # cache clear aws cf
+      - run: aws cloudfront create-invalidation --distribution-id E2BB1AQ52WB97Z --paths /*
