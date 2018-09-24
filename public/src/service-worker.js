@@ -5,6 +5,7 @@ const urlsToCache = [
   //libファイル
   '../lib/jquery-3.3.1.min.js',
   '../lib/stimulus.umd.js',
+  '../lib/jsrender.min.js',
   //ソースファイル
   './stimulus.extensions.js',
   './controllers/index.js',
