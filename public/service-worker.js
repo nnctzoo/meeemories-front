@@ -3,17 +3,17 @@
 const CACHE_NAME = 'cache-v1';
 const urlsToCache = [
   //libファイル
-  '../lib/jquery-3.3.1.min.js',
-  '../lib/stimulus.umd.js',
-  '../lib/jsrender.min.js',
+  '/lib/jquery-3.3.1.min.js',
+  '/lib/stimulus.umd.js',
+  '/lib/jsrender.min.js',
   //ソースファイル
-  './stimulus.extensions.js',
-  './controllers/index.js',
-  './controllers/app.js',
-  './controllers/list.js',
-  './controllers/media-item.js',
-  './controllers/uploading-item.js',
-  './sw-register.js'
+  '/src/stimulus.extensions.js',
+  '/src/controllers/index.js',
+  '/src/controllers/app.js',
+  '/src/controllers/list.js',
+  '/src/controllers/media-item.js',
+  '/src/controllers/uploading-item.js',
+  '/src/sw-register.js'
 ];
 
 self.addEventListener('install', (event) => {
