@@ -384,9 +384,9 @@ body::-webkit-scrollbar {
 .uploading-item {
   position: relative;
   background: white;
-  display: grid;
-  grid-template-columns: 64px 1fr;
-  grid-template-rows: 64px 4px;
+  /* display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 64px 4px; */
   margin: 32px;
   border-radius: 4px;
   box-shadow: -1px 1px 10px 0 gray;
@@ -397,11 +397,17 @@ body::-webkit-scrollbar {
    bottom: 0;
 }
 .uploading-item__thumb {
-  width: 64px;
-  height: 64px;
+  /* width: 64px;
+  height: 64px; */
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
+}
+.uploading-item__thumb::before {
+  display: block;
+  content: '';
+  padding-top: 100%;
 }
 .uploading-item__indicator {
   display: block;
@@ -461,37 +467,47 @@ body::-webkit-scrollbar {
 .uploading-item__breadcrumb {
   display: flex;
   flex-direction: row;
-  justify-content: stretch;
+  justify-content: center;
   align-items: center;
 }
 .uploading-item__breadcrumb li {
   display: block;
   border-radius: 50%;
   box-sizing: border-box;
-  width: 64px;
+  /* width: 64px; */
   height: 64px;
   line-height: 64px;
-  margin: 0 4px;
+  margin: 0 8px;
   text-align: center;
 }
 .uploading-item__breadcrumb li span {
   display: inline-block;
 }
 
-.uploading-item__breadcrumb li:nth-child(1) {
-  background: lightpink;
-  color: white;
+.uploading-item__breadcrumb li {
+  color: gray;
 }
-.uploading-item--converting .uploading-item__breadcrumb li:nth-child(2),
-.uploading-item--succeeded .uploading-item__breadcrumb li:nth-child(2) {
-  background: #f78fb3;
-  color: white;
+.uploading-item__breadcrumb li::after {
+  content: '>';
+  padding-left: 16px;
 }
-.uploading-item--succeeded .uploading-item__breadcrumb li:nth-child(3) {
-  background: #EA6264;
-  color: white;
+.uploading-item__breadcrumb li:last-child:after {
+  content: none;
+  padding-left: 0;
 }
 
+.uploading-item__breadcrumb li:nth-child(1) {
+  color: black;
+}
+.uploading-item--uploading .uploading-item__breadcrumb li:nth-child(1) span,
+.uploading-item--uploaded .uploading-item__breadcrumb li:nth-child(1)::after,
+.uploading-item--converting .uploading-item__breadcrumb li:nth-child(2) span,
+.uploading-item--succeeded .uploading-item__breadcrumb li:nth-child(3) span {
+  color: #EA6264;
+}
+.uploading-item--succeeded .uploading-item__breadcrumb li:nth-child(2) {
+  color: black;
+}
 input[type="file"] {
   position: absolute;
   display: block;
