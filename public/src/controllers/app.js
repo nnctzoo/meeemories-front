@@ -14,7 +14,8 @@ Meeemories.register("app", class extends Stimulus.Controller {
     window.addEventListener('scroll', () => this.dispatchState());
     this.dispatchState();
 
-    this.move(window.location.hash);
+    this.application.state.subscribe('page', page => this.move(page));
+    this.application.state.patch({page: window.location.hash});
   }
   dispatchState() {
     this.application.state.patch({scroll: window.scrollY + window.innerHeight});
@@ -77,7 +78,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   go(e) {
     const hash = e.target.closest('.actions__item').dataset.to;
-    this.move(hash);
+    this.application.state.patch({page: hash});
     window.history.replaceState(null,null,hash);
     return false;
   }
