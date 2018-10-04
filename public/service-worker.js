@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'cache-v1';
+const CACHE_NAME = '%CACHE_NAME%';
 const urlsToCache = [
   //libファイル
   '/lib/jquery-3.3.1.min.js',
@@ -39,11 +39,9 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           // ホワイトリストにないキャッシュ(古いキャッシュ)は削除する
-          // 谷口>ここページロードするたびにキャッシュが飛ぶのがもったいないのでコメントアウト。
-          // なんかいい感じのキャッシュクリア方法を考えたい。
-          // if (cacheWhitelist.indexOf(cacheName) === -1) {
-          //   return caches.delete(cacheName);
-          // }
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
         })
       );
     })
@@ -60,7 +58,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(fetch(event.request));
     return;
   }
-        
+  
   const cacheKey = event.request.url;
   event.respondWith(
     caches.match(cacheKey)

@@ -9,6 +9,9 @@ jobs:
     steps:
       - checkout
 
+      # update cache version
+      - run: sed -i 's/%CACHE_NAME%/100/' public/service-worker.js
+
       # copy to aws s3
       - run: aws s3 sync public s3://www.meeemori.es
 
