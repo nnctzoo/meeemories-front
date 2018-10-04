@@ -39,6 +39,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     }
   }
   load (startIndex) {
+    fetch('https://picsum.photos/list', {headers:{'cache-control': 'no-cache'}});
     startIndex = parseInt(startIndex) || 0;
     return new Promise(resolve => {
       const data = [];

@@ -39,9 +39,11 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           // ホワイトリストにないキャッシュ(古いキャッシュ)は削除する
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
+          // 谷口>ここページロードするたびにキャッシュが飛ぶのがもったいないのでコメントアウト。
+          // なんかいい感じのキャッシュクリア方法を考えたい。
+          // if (cacheWhitelist.indexOf(cacheName) === -1) {
+          //   return caches.delete(cacheName);
+          // }
         })
       );
     })
@@ -49,23 +51,38 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method.toUpperCase() !== 'GET') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  if (event.request.headers.get('Cache-Control') === 'no-cache') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+        
+  const cacheKey = event.request.url;
   event.respondWith(
-    caches.match(event.request)
+    caches.match(cacheKey)
     .then((response) => {
       if (response) {
         return response;
       }
 
-      // 重要：リクエストを clone する。リクエストは Stream なので
-      // 一度しか処理できない。ここではキャッシュ用、fetch 用と2回
-      // 必要なので、リクエストは clone しないといけない
-      let fetchRequest = event.request.clone();
-
-      return fetch(fetchRequest)
+      return fetch(event.request)
         .then((response) => {
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+          if (!response)
             return response;
-          }
+
+          if (response.status !== 200 && response.type !== 'opaque')
+            return response;
+          
+          if (response.type !== 'basic' && response.type !== 'cors' && response.type !== 'opaque')
+            return response;
+
+          if (response.headers.get('Cache-Control') === 'no-cache')
+            return response;
+          
 
           // 重要：レスポンスを clone する。レスポンスは Stream で
           // ブラウザ用とキャッシュ用の2回必要。なので clone して
@@ -74,7 +91,7 @@ self.addEventListener('fetch', (event) => {
 
           caches.open(CACHE_NAME)
             .then((cache) => {
-              cache.put(event.request, responseToCache);
+              cache.put(cacheKey, responseToCache);
             });
 
           return response;
