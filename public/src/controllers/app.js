@@ -10,6 +10,14 @@ Meeemories.register("app", class extends Stimulus.Controller {
    
     this.application.state.subscribe('selecting', () => this.update());
     this.update();
+
+    window.addEventListener('popstate', e => {
+      if (!e.state) {
+        const popup = this.find('popup');
+        if (popup)
+          popup.remove();
+      }
+    })
     
     window.addEventListener('scroll', () => this.dispatchState());
     this.dispatchState();

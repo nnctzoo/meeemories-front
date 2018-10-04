@@ -8,8 +8,13 @@ Meeemories.register("popup", class extends Stimulus.Controller {
     })
     this.imageTarget.srcset = this.srcset;
     this.imageTarget.src = this.src;
+    window.history.pushState({detail:'show'}, null, '#show');
   }
   close() {
+    this.remove();
+    window.history.go(-1);
+  }
+  remove() {
     this.element.remove();
   }
   update() {
