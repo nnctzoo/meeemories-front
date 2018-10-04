@@ -9,10 +9,13 @@ const urlsToCache = [
   //ソースファイル
   '/src/stimulus.extensions.js',
   '/src/controllers/index.js',
+  '/src/controllers/logo.js',
   '/src/controllers/app.js',
   '/src/controllers/list.js',
   '/src/controllers/media-item.js',
   '/src/controllers/uploading-item.js',
+  '/src/controllers/popup.js',
+  '/src/controllers/menu.js',
   '/src/sw-register.js'
 ];
 
