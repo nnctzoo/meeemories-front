@@ -14,8 +14,11 @@ Meeemories.register("app", class extends Stimulus.Controller {
     window.addEventListener('scroll', () => this.dispatchState());
     this.dispatchState();
 
+    const hashquery = window.location.hash || '';
+    const question = hashquery.indexOf('?');
+    const hash = question > 0 ? hashquery.substring(0, question) : hashquery;
     this.application.state.subscribe('page', page => this.move(page));
-    this.application.state.patch({page: window.location.hash});
+    this.application.state.patch({page: hash});
   }
   dispatchState() {
     this.application.state.patch({scroll: window.scrollY + window.innerHeight});
@@ -58,7 +61,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   toggleView() {
     this.isGridView = !this.isGridView;
-    this.mainTarget.scrollTop = 0;
+    window.scrollTo(0,0);
   }
   update() {
     this.debounce('upload', 50, () => {
@@ -92,6 +95,15 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
     this.move('#mypage');
+  }
+  download() {
+    alert("Downloading...");
+  }
+  showMenu() {
+    const template = document.querySelector('#menu-tmpl').content;
+    const fragment = template.cloneNode(true);
+    document.body.appendChild(fragment);
+    
   }
   get list () {
     if (!this.__list) {

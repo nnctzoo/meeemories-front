@@ -293,11 +293,27 @@ body::-webkit-scrollbar {
     right: calc((100vw - 960px) / 2 + 8px) ;
   }
 }
+.app__download {
+  display: none;
+  top: 160px;
+  right: 8px;
+}
+@media screen and (min-width: 960px) {
+  .app__download {
+    right: calc((100vw - 960px) / 2 + 8px) ;
+  }
+}
+.app--selecting .app__download {
+  display: block;
+}
 .app__view-switch::before {
   content: 'view_module';
 }
 .app--grid-view .app__view-switch::before {
   content: 'view_stream';
+}
+.app__download::before {
+  content: 'cloud_download';
 }
 
 .page {
@@ -526,4 +542,44 @@ input[type="file"] {
   left: 0;
   background: #fff;
   z-index: 9999;
+}
+.menu {
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+}
+.menu__list {
+  position: fixed;
+  background: white;
+  top: 48px;
+  right: 0;
+  padding: 8px;
+  box-shadow: 0 0 10px rgba(128,128,128, 0.4);
+  z-index: 100;
+}
+.menu__list::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 8px solid transparent;
+  border-bottom-color: white;
+  position: absolute;
+  top: -16px;
+  right: 8px;
+}
+.menu__item {
+  padding: 8px;
+  transition: all linear 0.15s;
+  font-size: 12px;
+}
+.menu__item:hover {
+  background: lightgrey;
+}
+.menu__item > a {
+  text-decoration: none;
+  color: black;
 }

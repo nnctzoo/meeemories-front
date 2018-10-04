@@ -36,3 +36,6 @@ Stimulus.Controller.prototype.throttle = function (code, dt, callback) {
     }, dt);
   }
 }
+Stimulus.Controller.prototype.initialized = function () {
+  this.element.dispatchEvent(new CustomEvent('initialized'));
+}

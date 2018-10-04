@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="msapplication-TileColor" content="#fae8e2">
+  <meta name="theme-color" content="#ea6264">
+  <title>meeemories</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-180x180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-touch-icon-60x60.png">
+  <link rel="icon" href="/fabicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+  <link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#ea6264">
+  <link rel="manifest" href="/manifest.json">
+  <link href="https://fonts.googleapis.com/icon?family=Cookie|Material+Icons" rel="stylesheet">
+  <link href="./style/reset.css" rel="stylesheet" type="text/css">
+  <link href="./style/slide.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript">
+    !function(a,b,c,d,e,f,g,h){a.RaygunObject=e,a[e]=a[e]||function(){
+    (a[e].o=a[e].o||[]).push(arguments)},f=b.createElement(c),g=b.getElementsByTagName(c)[0],
+    f.async=1,f.src=d,g.parentNode.insertBefore(f,g),h=a.onerror,a.onerror=function(b,c,d,f,g){
+    h&&h(b,c,d,f,g),g||(g=new Error(b)),a[e].q=a[e].q||[],a[e].q.push({
+    e:g})}}(window,document,"script","//cdn.raygun.io/raygun4js/raygun.min.js","rg4js");
+  </script>
+</head>
+<body>
+  <ul class="slideshow" data-controller="slide">
+  </ul>
+  <script src="./lib/jquery-3.3.1.min.js"></script>
+  <script src="./lib/jsrender.min.js"></script>
+  <script src="./lib/stimulus.umd.js"></script>
+  <script src="./src/stimulus.extensions.js"></script>
+  <script src="./src/controllers/index.js"></script>
+  <script id="slide-tmpl" type="text/x-jsrender">
+    <li class="slide"
+        data-target="slideshow.slide"
+        data-controller="slide"
+        data-slide-src="{{:large.src}}"
+        data-slide-srcset="{{:large.srcset}}">
+      <img class="slide__image" data-target="slide.image">
+      <img class="slide__cover" style="background-image: url('{{:tiny}}');">
+    </li>
+  </script>
+  <script>
+    rg4js('apiKey', '8Ra6BNmK9jKdVW5lXUNYRQ==');
+    rg4js('enableCrashReporting', true);
+    rg4js('enablePulse', true);
+    rg4js('setUser', {isAnonymous: true});
+    Meeemories.state.subscribe('page', hash => {
+      rg4js('trackEvent', { type: 'pageView', path: '/' + hash });
+    })
+  </script>
+</body>
+</html>

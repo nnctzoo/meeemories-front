@@ -31,13 +31,14 @@
 <body class="app" data-controller="app">
   <header class="app__header">
     <h1 class="logo" data-controller="logo">meeemories</h1>
-    <i class="app__menu-switch material-icons">more_vert</i>
+    <i class="app__menu-switch material-icons" data-action="click->app#showMenu">more_vert</i>
   </header>
   <main class="app__main" data-target="app.main">
     <section id="home" class="page page--active" data-target="app.list" data-controller="list" data-list-item-template="#media-tmpl">
       <div class="list__container" data-target="list.container"></div>
       <div class="list__next" data-target="list.next"></div>
       <button class="fab app__view-switch material-icons" data-action="app#toggleView"></button>
+      <button class="fab app__download material-icons" data-action="app#download">cloud_download</button>
     </section>
     <section id="mypage" class="page" data-target="app.mines" data-message="Android端末やご使用ブラウザによっては複数アップロードがご利用できません">
     </section>
@@ -62,7 +63,7 @@
       <li class="actions__space"></li>
     </ul>
   </footer>
-  <div id="debug"></div>
+  <div id="debug" style="display: none;"></div>
   <script src="./lib/jquery-3.3.1.min.js"></script>
   <script src="./lib/jsrender.min.js"></script>
   <script src="./lib/stimulus.umd.js"></script>
@@ -74,6 +75,7 @@
   <script src="./src/controllers/media-item.js"></script>
   <script src="./src/controllers/popup.js"></script>
   <script src="./src/controllers/uploading-item.js"></script>
+  <script src="./src/controllers/menu.js"></script>
   <script src="./src/sw-register.js"></script>
   <script id="media-tmpl" type="text/x-jsrender">
     <div  class="media-item media-item--animating"
@@ -114,6 +116,15 @@
         <button class="uploading-item__remove" data-action="uploading-item#remove"><i class="material-icons">delete</i></button>
       </div>
   </template>
+  <template id="menu-tmpl">
+      <div class="menu" data-controller="menu" data-action="click->menu#remove">
+        <ul class="menu__list">
+          <li class="menu__item"><a href="slide.html">スライドショー</a></li>
+          <li class="menu__item"><a href="admin.html">管理者サイト</a></li>
+        </ul>
+      </div>
+    </div>
+  </template>
   <script>
     rg4js('apiKey', '8Ra6BNmK9jKdVW5lXUNYRQ==');
     rg4js('enableCrashReporting', true);
@@ -122,6 +133,9 @@
     Meeemories.state.subscribe('page', hash => {
       rg4js('trackEvent', { type: 'pageView', path: '/' + hash });
     })
+
+    if (location.hash.indexOf('debug') > 0)
+      document.getElementById('debug').style.display = 'block';
   </script>
 </body>
 </html>
