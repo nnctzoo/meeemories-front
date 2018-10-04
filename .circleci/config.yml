@@ -14,7 +14,8 @@ jobs:
           command: |
             cd ~/repo
             version=$CIRCLE_SHA1
-            sed -i 's/%CACHE_NAME%/$version/' public/service-worker.js
+            echo version = $version
+            sed -i "s/%CACHE_NAME%/$version/" public/service-worker.js
 
       # copy to aws s3
       - run: aws s3 sync public s3://www.meeemori.es
