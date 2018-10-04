@@ -18,9 +18,13 @@ Stimulus.Controller.prototype.find = function (identifier) {
   return this.application.getControllerForElementAndIdentifier(el, identifier);
 }
 Stimulus.Controller.prototype.initialized = function () {
-  setTimeout(() => {
-    this.element.dispatchEvent(new CustomEvent('initialized'));
-  }, 0);
+  const poling = offset => setTimeout(() => {
+    if (this.getController(this.element, this.identifier) !== null)
+      this.element.dispatchEvent(new CustomEvent('initialized'));
+    else
+      poling(2 * offset);
+  }, offset);
+  poling(1);
 }
 Stimulus.Controller.prototype.debounce = function (code, dt, callback) {
   this.__debounces = this.__debounces || {};
@@ -39,7 +43,4 @@ Stimulus.Controller.prototype.throttle = function (code, dt, callback) {
       this.__throttles[code] = null;
     }, dt);
   }
-}
-Stimulus.Controller.prototype.initialized = function () {
-  this.element.dispatchEvent(new CustomEvent('initialized'));
 }
