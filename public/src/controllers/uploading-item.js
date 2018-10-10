@@ -6,12 +6,13 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.initialized();
   }
   start(file) {
-    this.setThumb(file);
+    this.setThumb(new File([file], 'thumbnail'));
     this.upload(file).then(data => {
       this.selfLink = "";
       this.watch();
     }).catch(() => {
-      this.status = 'faild';
+      alert('アップロードに失敗しました。');
+      this.element.remove();
     });
   }
   setThumb(file) {
@@ -58,17 +59,25 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   upload(file) {
     this.status = 'uploading';
     return new Promise((resolve, reject) => {
-      // ダミーアップロード
-      const __ = () => {
-        this.progress = this.progress + 1;
-        if (this.progress >= 100) {
-          resolve();
-        }
-        else {
-          setTimeout(__, 30);
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = e => {
+        if(e.lengthComputable) {
+          this.progress = ~~((e.loaded / e.total) * 100);
         }
       }
-      __();
+      xhr.upload.onload = () => {
+        this.progress = 100;
+        resolve(JSON.parse(xhr.responseText));
+      }
+      xhr.upload.onerror = () => {
+        reject();
+      }
+      xhr.upload.ontimeout = () => {
+        reject();
+      }
+      xhr.open('POST', 'https://api.meeemori.es/contents');
+      xhr.withCredentials = true;
+      xhr.send(file);
     });
   }
   watch() {

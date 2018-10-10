@@ -40,5 +40,6 @@ window.Meeemories = Stimulus.Application.start();
   if (window.navigator && window.navigator.userAgent) {
     app.state.patch({ios: this.navigator.userAgent.indexOf('iPhone') > 0 || this.navigator.userAgent.indexOf('iPad') > 0 });
     app.state.patch({android: this.navigator.userAgent.indexOf('Android') > 0});
+    app.state.patch({pc: !app.state.get('ios') && !app.state.get('android')});
   }
 }(window.Meeemories))

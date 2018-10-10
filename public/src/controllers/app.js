@@ -39,31 +39,36 @@ Meeemories.register("app", class extends Stimulus.Controller {
     }
   }
   load (startIndex) {
-    fetch('https://picsum.photos/list', {headers:{'cache-control': 'no-cache'}});
     startIndex = parseInt(startIndex) || 0;
-    return new Promise(resolve => {
-      const data = [];
-      Array
-          .from(Array(10), (v, k) => startIndex + k)
-          .forEach(i => 
-            data.push({
-              id: i,
-              aspect: 1200 / 800,
-              download: "https://picsum.photos/800/1200?image=" + i,
-              tiny:"https://picsum.photos/20/30?image=" + i,
-              thumbnail: {
-                src: "https://picsum.photos/200/300?image=" + i,
-                srcset: `https://picsum.photos/200/300?image=${i} 200w, https://picsum.photos/400/600?image=${i} 400w` + (this.application.state.get('ios') ? '' :`, https://picsum.photos/800/1200?image=${i} 800w`),
-                sizes: "(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px"
-              },
-              large: {
-                src: "https://picsum.photos/400/600?image=" + i,
-                srcset: `https://picsum.photos/400/600?image=${i} 1x, https://picsum.photos/800/1200?image=${i} 2x`,
-                sizes: ""
-              }
-            }));
-      resolve(data);
-    }).then((data) => {
+    return fetch('https://api.meeemori.es/contents',{ mode:'cors' }).then(res => {
+      if (res.ok)
+        return res.json();
+      else
+        alert('エラーが発生しました。再度お試しください。')
+    }, () => {
+      alert('通信エラーが発生しました。\nネットワークをご確認の上、再度お試しください。')
+    })
+    .then(data => {
+      return data.contents.map(d => {
+        const sources = d.sources.sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
+        return {
+          id: d.id,
+          aspect: sources[3].height / sources[3].width,
+          download: null,
+          tiny: sources[0].url,
+          thumbnail: {
+            src: sources[1].url,
+            srcset: sources[1].url + ' ' + sources[1].width + 'w, ' + sources[2].url + ' ' + sources[2].width + 'w' + (this.application.state.get('pc') ? (', ' + sources[3].url + ' ' + sources[3].width + 'w') : ''),
+            sizes: '(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px'
+          },
+          large: {
+            src: sources[2].url,
+            srcset: sources[2].url + ' ' + sources[2].width + 'w, ' + sources[3].url + ' ' + sources[3].width + 'w'
+          }
+        }
+      });
+    })
+    .then((data) => {
       this.list.append(data);
       this.list.nextLink = data.pop().id + 1;
     })
@@ -103,6 +108,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       });
       this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
+    this.fileTarget.value = '';
     this.move('#mypage');
   }
   download() {
