@@ -64,7 +64,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
         else {
           const mosic = sources.shift();
           const thumbnail = pc? sources.filter((_,i) => i < 3) : sources.filter((_,i) => i < 2);
-          const large = sources.reverse().filter((_,i) => i < 2);
+          const large = sources.reverse().filter((_,i) => i < 2).reverse();
           return {
             id: d.id,
             type: 'image',
