@@ -25,6 +25,14 @@ Meeemories.register("list", class extends Stimulus.Controller {
     }
   }
   prepend(data) {
+    const template = $(this.itemTemplate);
+    for (const datum of data) {
+      const html = template.render(datum);
+      this.containerTarget.insertAdjacentHTML('afterbegin', html);
+    }
+    setTimeout(() => {
+      this.tryDispatchNext();
+     }, 500);
   }
   append(data) {
     const template = $(this.itemTemplate);

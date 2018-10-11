@@ -58,6 +58,11 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  if (event.request.method.toUpperCase() !== 'GET' && event.request.url === 'https://api.meeemori.es/contents') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   
   const cacheKey = event.request.url;
   event.respondWith(

@@ -6,9 +6,10 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.initialized();
   }
   start(file) {
-    this.setThumb(new File([file], 'thumbnail'));
+    this.setThumb(new File([file], file.name, {type:file.type}));
     this.upload(file).then(data => {
-      this.selfLink = "";
+      this.status = 'uploaded';
+      this.selfLink = data.detail;
       this.watch();
     }).catch(() => {
       alert('アップロードに失敗しました。');
@@ -58,6 +59,8 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   upload(file) {
     this.status = 'uploading';
+    const form = new FormData();
+    form.append('file', file);
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.upload.onprogress = e => {
@@ -65,9 +68,16 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
           this.progress = ~~((e.loaded / e.total) * 100);
         }
       }
-      xhr.upload.onload = () => {
-        this.progress = 100;
-        resolve(JSON.parse(xhr.responseText));
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200 || xhr.status === 201) {
+            this.progress = 100;
+            resolve(JSON.parse(xhr.responseText));
+          }
+          else {
+            reject();
+          }
+        }
       }
       xhr.upload.onerror = () => {
         reject();
@@ -75,32 +85,28 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       xhr.upload.ontimeout = () => {
         reject();
       }
+      
       xhr.open('POST', 'https://api.meeemori.es/contents');
-      xhr.withCredentials = true;
-      xhr.send(file);
+      // xhr.withCredentials = true;
+      xhr.send(form);
     });
   }
   watch() {
-    
-    // ここでサーバーにステータスを問い合わせる
-    // fetch(this.selfLink).then(res => res.json);
-    const status = this.status;
-    
-    // これはダミーコード
-    switch(this.status) {
-      case 'uploading' : this.status = 'uploaded'; break;
-      case 'uploaded' : this.status = 'converting'; break;
-      case 'converting' : this.status = 'succeeded'; break;
-      case 'succeeded' : this.status = 'succeeded'; break;
-      default: this.status = 'none';
-    }
-
-    if (this.status == 'succeeded') {
-      // setTimeout(() => { this.remove(); }, 3000);
-    }
-    else {
-      setTimeout(() => { this.watch(); }, 3000);
-    }
+    fetch('https://api.meeemori.es' + this.selfLink).then(res => res.json()).then(data => {
+      console.log(data);
+      if (data.pending && !data.available) {
+        this.status = 'converting';
+      }
+      else if (!data.pending && data.available) {
+        this.status = 'succeeded';
+      }
+      else if (!data.pending && !data.available) {
+        this.status = 'faild';
+      }
+      if (this.status !== 'succeeded' && this.status !== 'faild') {
+        setTimeout(() => { this.watch(); }, 3000);
+      }
+    });
   }
   remove() {
     this.element.remove();

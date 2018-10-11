@@ -6,7 +6,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.listTarget.addEventListener('next', e => {
       this.tryLoad(e.detail);
     });
-    this.tryLoad(151);
+    this.tryLoad();
    
     this.application.state.subscribe('selecting', () => this.update());
     this.update();
@@ -33,14 +33,16 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   tryLoad(url) {
     if (!this.isLoading) {
-      this.isLoading = true;
-      const finalize = () => {this.isLoading = false;};
-      this.load(url).then(finalize, finalize);
+      this.throttle('fetch',3000, () => {
+        this.isLoading = true;
+        const finalize = () => {this.isLoading = false;};
+        this.load(url).then(finalize, finalize);
+      })
     }
   }
   load (startIndex) {
-    startIndex = parseInt(startIndex) || 0;
-    return fetch('https://api.meeemori.es/contents',{ mode:'cors' }).then(res => {
+    const url = !startIndex ? 'https://api.meeemori.es/contents' : 'https://api.meeemori.es/contents?after=' + startIndex;
+    return fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
       if (res.ok)
         return res.json();
       else
@@ -50,27 +52,43 @@ Meeemories.register("app", class extends Stimulus.Controller {
     })
     .then(data => {
       return data.contents.map(d => {
+        const pc = this.application.state.get('pc');
         const sources = d.sources.sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
-        return {
-          id: d.id,
-          aspect: sources[3].height / sources[3].width,
-          download: null,
-          tiny: sources[0].url,
-          thumbnail: {
-            src: sources[1].url,
-            srcset: sources[1].url + ' ' + sources[1].width + 'w, ' + sources[2].url + ' ' + sources[2].width + 'w' + (this.application.state.get('pc') ? (', ' + sources[3].url + ' ' + sources[3].width + 'w') : ''),
-            sizes: '(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px'
-          },
-          large: {
-            src: sources[2].url,
-            srcset: sources[2].url + ' ' + sources[2].width + 'w, ' + sources[3].url + ' ' + sources[3].width + 'w'
+        const raw = sources[sources.length - 1];
+        if (sources.some(s => s.mime_type.startsWith('video'))) {
+          return {
+            id: d.id,
+            aspect: raw.height / raw.width,
+          }
+        }
+        else {
+          const mosic = sources.shift();
+          const thumbnail = pc? sources.filter((_,i) => i < 3) : sources.filter((_,i) => i < 2);
+          const large = sources.reverse().filter((_,i) => i < 2);
+          return {
+            id: d.id,
+            type: 'image',
+            aspect: raw.height / raw.width,
+            download: null,
+            tiny: mosic.url,
+            thumbnail: {
+              src: thumbnail[0].url,
+              srcset: thumbnail.map(t => t.url + ' '+ t.width + 'w').join(','),
+              sizes: '(max-width: 320px) and (-webkit-min-device-pixel-ratio: 1) 200px, (max-width: 320px) and (-webkit-min-device-pixel-ratio: 2) 400px, (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) 400px, 800px'
+            },
+            large: {
+              src: large[0].url,
+              srcset: large.map(t => t.url + ' '+ t.width + 'w').join(',')
+            }
           }
         }
       });
     })
     .then((data) => {
-      this.list.append(data);
-      this.list.nextLink = data.pop().id + 1;
+      this.list.prepend(data.reverse());
+      if(data.length > 0) {
+        this.list.nextLink = (data[data.length - 1].id);
+      }
     })
   }
   toggleView() {
