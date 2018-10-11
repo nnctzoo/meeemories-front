@@ -41,7 +41,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     }
   }
   load (startIndex) {
-    const url = !startIndex ? 'https://api.meeemori.es/contents' : 'https://api.meeemori.es/contents?after=' + startIndex;
+    const url = !startIndex ? 'https://api.meeemori.es/contents' : 'https://api.meeemori.es/contents?before=' + startIndex;
     return fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
       if (res.ok)
         return res.json();
@@ -85,7 +85,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       });
     })
     .then((data) => {
-      this.list.prepend(data.reverse());
+      this.list.append(data);
       if(data.length > 0) {
         this.list.nextLink = (data[data.length - 1].id);
       }
