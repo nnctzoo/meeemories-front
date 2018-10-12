@@ -18,7 +18,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   setThumb(file) {
     if (file.type.match('image')) {
-      this.thumbTarget.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
+      this.setThumbUrl(URL.createObjectURL(file));
     }
     else if (file.type.match('video')) {
       const video = document.createElement('video');
@@ -30,7 +30,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
         var url = canvas.toDataURL();
         var success = url.length > 1000;
         if (success) {
-          this.thumbTarget.style.backgroundImage = `url('${url}')`;
+          this.setThumbUrl(url);
         }
         return success;
       }
@@ -99,6 +99,11 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       }
       else if (!data.pending && data.available) {
         this.status = 'succeeded';
+        const sources = data.sources.filter(s => s.mime_type.startsWith('image')).sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
+        const url = sources.length >= 2 ? sources[sources.length - 2].url : sources.length > 0 ? sources[sources.length - 1].url : null;
+        if (url) {
+          fetch(url).then(res => {if(res.ok) return res.blob()}).then(blob => this.setThumbUrl(URL.createObjectURL(blob)))
+        }
       }
       else if (!data.pending && !data.available) {
         this.status = 'faild';
@@ -120,6 +125,9 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.element.classList.toggle("uploading-item--succeeded", status === 'succeeded');
     this.element.classList.toggle("uploading-item--faild", status === 'faild');
     this.progressTarget.style.width = this.progress + '%';
+  }
+  setThumbUrl(url) {
+    this.thumbTarget.style.backgroundImage = "url('" + url +"')";
   }
   get selfLink() {
     return this.data.get('self-link');
