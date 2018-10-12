@@ -160,7 +160,8 @@ Meeemories.register("app", class extends Stimulus.Controller {
     }
     if (page === '#mypage') {
       for(const item of this.children('uploading-item')) {
-        item.watch();
+        if (item)
+          item.watch();
       }
     }
   }
