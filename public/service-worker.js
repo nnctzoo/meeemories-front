@@ -59,7 +59,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (event.request.method.toUpperCase() !== 'GET' && event.request.url.startsWith('https://api.meeemori.es/')) {
+  if (event.request.method.toUpperCase() === 'GET' && event.request.url.startsWith('https://api.meeemori.es/')) {
     event.respondWith(fetch(event.request));
     return;
   }
