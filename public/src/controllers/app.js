@@ -52,7 +52,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
         item.selfLink = mine.url;
         //item.watch();
       });
-      this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
+      this.minesTarget.appendChild(fragment);
     }
     this.application.state.subscribe('uploading-item', count => {
       this.emptyMyupload = count === 0;
