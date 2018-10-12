@@ -448,7 +448,7 @@ body::-webkit-scrollbar {
 }
 @keyframes upload-item-indicator {
   from { left: 0;}
-  to { left: calc(100% - 8px);}
+  to { left: calc(100% - 32px);}
 }
 /* .uploading-item--succeeded .uploading-item__indicator {
   background: transparent;

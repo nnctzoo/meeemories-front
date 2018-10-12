@@ -10,12 +10,13 @@ Meeemories.register("app", class extends Stimulus.Controller {
    
     this.application.state.subscribe('selecting', () => this.update());
     this.update();
-
     window.addEventListener('popstate', e => {
       if (!e.state) {
         const popup = this.find('popup');
-        if (popup)
+        if (popup) {
           popup.remove();
+          this.application.startScroll();
+        }
       }
     })
     
@@ -25,7 +26,12 @@ Meeemories.register("app", class extends Stimulus.Controller {
     const hashquery = window.location.hash || '';
     const question = hashquery.indexOf('?');
     const hash = question > 0 ? hashquery.substring(0, question) : hashquery;
-    this.application.state.subscribe('page', page => this.move(page));
+    this.application.state.subscribe('page', (page, old) => {
+      if (page != old) {
+        this.move(page)
+        window.history.replaceState(null,null,page);
+      }
+    });
     this.application.state.patch({page: hash});
   }
   dispatchState() {
@@ -85,7 +91,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       });
     })
     .then((data) => {
-      this.list.append(data);
+      this.list.replace(data);
       if(data.length > 0) {
         this.list.nextLink = (data[data.length - 1].id);
       }
@@ -110,11 +116,13 @@ Meeemories.register("app", class extends Stimulus.Controller {
       target.classList.add('page--active');
       document.querySelector('[data-to="' + page + '"] .icon').classList.add('icon--active');
     }
+    if (page === '#home') {
+      this.tryLoad();
+    }
   }
   go(e) {
     const hash = e.target.closest('.actions__item').dataset.to;
     this.application.state.patch({page: hash});
-    window.history.replaceState(null,null,hash);
     return false;
   }
   upload() {
@@ -127,7 +135,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
     this.fileTarget.value = '';
-    this.move('#mypage');
+    this.application.state.patch({page: '#mypage'});
   }
   download() {
     alert("Downloading...");

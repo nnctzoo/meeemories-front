@@ -42,4 +42,16 @@ window.Meeemories = Stimulus.Application.start();
     app.state.patch({android: this.navigator.userAgent.indexOf('Android') > 0});
     app.state.patch({pc: !app.state.get('ios') && !app.state.get('android')});
   }
+  
+  function disableScroll(e) {
+    e.preventDefault();
+  }
+  app.stopScroll = function() {
+    window.addEventListener('wheel', disableScroll);
+    window.addEventListener('touchmove.noScroll', disableScroll);
+  }
+  app.startScroll = function() {
+    window.removeEventListener('wheel', disableScroll);
+    window.removeEventListener('touchmove.noScroll', disableScroll);
+  }
 }(window.Meeemories))

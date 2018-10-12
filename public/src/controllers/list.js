@@ -44,6 +44,29 @@ Meeemories.register("list", class extends Stimulus.Controller {
       this.tryDispatchNext();
      }, 500);
   }
+  replace(data) {
+    const first = this.containerTarget.firstElementChild;
+    const last = this.containerTarget.lastElementChild;
+    if (!first || !last) {
+      return this.append(data);
+    } 
+    const template = $(this.itemTemplate);
+    for (const datum of data) {
+      if (document.getElementById('listitem-' + datum.id))
+        continue;
+      
+      const html = template.render(datum);
+      if (datum.id > parseInt(first.dataset.id)) {
+        first.insertAdjacentHTML('beforebegin', html);
+      } 
+      else {
+        this.containerTarget.insertAdjacentHTML('beforeend', html);
+      }
+    }
+    setTimeout(() => {
+      this.tryDispatchNext();
+     }, 500);
+  }
   update() {
     this.element.classList.toggle('list--grid-view', this.isGridView);
   }
