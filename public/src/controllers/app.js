@@ -87,9 +87,19 @@ Meeemories.register("app", class extends Stimulus.Controller {
         const sources = d.sources.sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
         const raw = sources[sources.length - 1];
         if (sources.some(s => s.mime_type.startsWith('video'))) {
+          const images = sources.filter(s => s.mime_type.startsWith('image'));
+          const video = sources.filter(s => s.mime_type.startsWith('video'))[0];
           return {
             id: d.id,
+            type: 'video',
             aspect: raw.height / raw.width,
+            tiny: images[0].url,
+            thumbnail: {
+              src: images[images.length-1].url,
+            },
+            large:{
+              src: video.url
+            }
           }
         }
         else {

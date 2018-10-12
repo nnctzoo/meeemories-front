@@ -113,7 +113,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
         const sources = data.sources.filter(s => s.mime_type.startsWith('image')).sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
         const url = sources.length >= 2 ? sources[sources.length - 2].url : sources.length > 0 ? sources[sources.length - 1].url : null;
         if (url) {
-          fetch(url).then(res => {if(res.ok) return res.blob()}).then(blob => this.setThumbUrl(URL.createObjectURL(blob)))
+          fetch(url).then(res => {if(res.ok) return res.blob()}).then(blob => {if(blob) this.setThumbUrl(URL.createObjectURL(blob));})
         }
       }
       else if (!data.pending && !data.available) {

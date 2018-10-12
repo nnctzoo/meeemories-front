@@ -102,8 +102,15 @@
           <button class="popup__close" data-action="popup#close">
             <i class="material-icons">arrow_back</i>
           </button>
+          {{if type == 'image'}}
           <img class="popup__image" src="{{:thumbnail.src}}" >
           <img class="popup__image" data-target="popup.image">
+          {{/if}}
+          {{if type == 'video'}}
+          <video class="popup__image" autoplay controls>
+            <source src="{{:large.src}}"/>
+          </video>
+          {{/if}}
         </article>
       </template>
     </div>

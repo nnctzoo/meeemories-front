@@ -3,11 +3,13 @@ Meeemories.register("popup", class extends Stimulus.Controller {
     return ['image']
   }
   initialize() {
-    this.imageTarget.addEventListener('load', () => {
-      this.loaded = true;
-    })
-    this.imageTarget.srcset = this.srcset;
-    this.imageTarget.src = this.src;
+    if (this.srcset) {
+      this.imageTarget.addEventListener('load', () => {
+        this.loaded = true;
+      })
+      this.imageTarget.srcset = this.srcset;
+      this.imageTarget.src = this.src;
+    }
     window.history.pushState({detail:'show'}, null, '#show');
     this.application.stopScroll();
   }
