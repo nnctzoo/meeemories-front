@@ -93,6 +93,9 @@
       <div class="media-item__space" style="padding-top:{{:aspect * 100}}%;"></div>
       <img class="media-item__thumb" data-target="media-item.thumb" data-action="click->media-item#onClick">
       <img class="media-item__cover" style="background-image: url('{{:tiny}}');" data-action="click->media-item#onClick">
+      {{if type == 'video'}}
+      <i class="media-item__type material-icons" data-action="click->media-item#onClick">play_circle_outline</i>
+      {{/if}}
       <button class="media-item__select" data-action="media-item#select"></button>
       <template data-target="media-item.template">
         <article  class="popup"
