@@ -4,6 +4,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
   }
   initialize() {
     this.initialized();
+    this.application.state.increment('uploading-item');
   }
   start(file) {
     this.setThumb(new File([file], file.name, {type:file.type}));
@@ -94,11 +95,14 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       xhr.send(form);
     });
   }
+  removeFromStore() {
+    const list = this.application.state.get('myupload') || [];
+    const removed = list.filter(item => item.url !== this.selfLink)
+    this.application.state.patch({myupload:removed});
+  }
   watch() {
     fetch('https://api.meeemori.es' + this.selfLink).then(res => res.json(), _ => {
-      const list = this.application.state.get('myupload') || [];
-      const removed = list.filter(item => item.url !== this.selfLink)
-      this.application.state.patch({myupload:removed});
+      this.removeFromStore();
     }).then(data => {
       console.log(data);
       if (data.pending && !data.available) {
@@ -121,8 +125,9 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     });
   }
   remove() {
+    this.removeFromStore();
     this.element.remove();
-    // Meeemories.state.decrement('uploading-item');
+    this.application.state.decrement('uploading-item');
   }
   update() {
     const status = this.status;

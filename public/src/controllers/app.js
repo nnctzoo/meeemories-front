@@ -50,6 +50,10 @@ Meeemories.register("app", class extends Stimulus.Controller {
       });
       this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
+    this.application.state.subscribe('uploading-item', count => {
+      this.emptyMyupload = count === 0;
+    });
+    this.emptyMyupload = myupload.length === 0;
   }
   dispatchState() {
     this.application.state.patch({scroll: window.scrollY + window.innerHeight});
@@ -123,6 +127,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.element.classList.toggle('app--grid-view', this.isGridView);
       this.element.classList.toggle('app--loading', this.isLoading);
       this.element.classList.toggle('app--selecting', this.isSelecting);
+      this.element.classList.toggle('app--empty-myupload', this.emptyMyupload);
     });
   }
   move(page) {
@@ -194,5 +199,12 @@ Meeemories.register("app", class extends Stimulus.Controller {
         return true;
     }
     return false;
+  }
+  get emptyMyupload() {
+    return this.data.get('empty-myupload') === 'true';
+  }
+  set emptyMyupload(value) {
+    this.data.set('empty-myupload', value)
+    this.update();
   }
 });

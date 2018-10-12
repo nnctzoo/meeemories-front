@@ -324,15 +324,17 @@ body::-webkit-scrollbar {
   margin: 0 auto;
   min-height: 90%;
   display: none;
+  padding-bottom: 64px;
 }
 .page::before {
   content: attr(data-message);
   font-size: 16px;
-  position: relative;
+  position: fixed;
   width: 80%;
   margin: 0 auto;
   display: block;
   text-align: center;
+  bottom: 64px;
 }
 .page--active {
   display: block;
@@ -582,4 +584,23 @@ input[type="file"] {
 .menu__item > a {
   text-decoration: none;
   color: black;
+}
+
+.app__description{
+  display: none;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  position: fixed;
+  bottom: 100px;
+  width: 100%;
+}
+.app__description p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+}
+.app--empty-myupload .app__description{
+  display: block;
 }
