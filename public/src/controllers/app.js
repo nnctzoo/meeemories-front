@@ -7,6 +7,10 @@ Meeemories.register("app", class extends Stimulus.Controller {
       this.tryLoad(e.detail);
     });
     this.tryLoad();
+
+    setTimeout(() => {
+      this.isGridView = localStorage.getItem('view') === 'grid';
+    }, 0);
    
     this.application.state.subscribe('selecting', () => this.update());
     this.update();
@@ -181,6 +185,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.data.set('is-grid-view', value);
     this.application.state.patch({'is-grid-view': value});
     this.update();
+    localStorage.setItem('view', value ? 'grid' : 'list');
     this.listTarget.style.opacity = 0;
     setTimeout(() => {
       this.listTarget.style.opacity = 1;    
