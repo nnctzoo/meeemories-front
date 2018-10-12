@@ -73,7 +73,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   load (startIndex) {
     const url = !startIndex ? 'https://api.meeemori.es/contents' : 'https://api.meeemori.es/contents?before=' + startIndex;
-    return fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
+    return fetch(url).then(res => {
       if (res.ok)
         return res.json();
     }, () => {
