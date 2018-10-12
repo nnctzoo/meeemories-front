@@ -164,7 +164,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.application.state.patch({page: '#mypage'});
   }
   download() {
-    alert("Downloading...");
+    alert("とてもギガが減るのでダウンロード機能は削除いたしました。m(_ _)m \nすべての投稿をまとめてダウンロードされたい方はお申し出ください。");
   }
   showMenu() {
     const template = document.querySelector('#menu-tmpl').content;
