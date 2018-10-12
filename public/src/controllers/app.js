@@ -184,7 +184,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   download() {
     const selecteds = Array.from(document.querySelectorAll('.media-item--selected')).map(el => el.dataset.id);
-    const body = "【希望画像ID】%0D%0A" + selecteds.map(_ => "・" + selecteds).join('%0D%0A');
+    const body = "【希望画像ID】%0D%0A" + selecteds.map(_ => "・" + _).join('%0D%0A');
     const html = $('#download-tmpl').render({body:body});
     document.body.insertAdjacentHTML('beforeend', html);
   }
