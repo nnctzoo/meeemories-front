@@ -178,7 +178,10 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.application.state.patch({page: '#mypage'});
   }
   download() {
-    alert("とてもギガが減るのでダウンロード機能は削除いたしました。m(_ _)m \nすべての投稿をまとめてダウンロードされたい方はお申し出ください。");
+    const selecteds = Array.from(document.querySelectorAll('.media-item--selected')).map(el => el.dataset.id);
+    const body = "【希望画像ID】%0D%0A" + selecteds.map(_ => "・" + selecteds).join('%0D%0A');
+    const html = $('#download-tmpl').render({body:body});
+    document.body.insertAdjacentHTML('beforeend', html);
   }
   showMenu() {
     const template = document.querySelector('#menu-tmpl').content;

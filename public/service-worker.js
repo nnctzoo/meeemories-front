@@ -16,6 +16,7 @@ const urlsToCache = [
   '/src/controllers/uploading-item.js',
   '/src/controllers/popup.js',
   '/src/controllers/menu.js',
+  '/src/controllers/download.js',
   '/src/sw-register.js'
 ];
 

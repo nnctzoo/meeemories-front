@@ -80,6 +80,7 @@
   <script src="./src/controllers/popup.js"></script>
   <script src="./src/controllers/uploading-item.js"></script>
   <script src="./src/controllers/menu.js"></script>
+  <script src="./src/controllers/download.js"></script>
   <script src="./src/sw-register.js"></script>
   <script id="media-tmpl" type="text/x-jsrender">
     <div  id="listitem-{{:id}}" class="media-item media-item--animating"
@@ -140,6 +141,15 @@
       </div>
     </div>
   </template>
+  <script id="download-tmpl" type="text/x-jsrender">
+    <div class="download" data-controller="download">
+      <div class="download__body">
+        <p class="download__message">後日メールにて元データを送らせていただきます。</p>
+        <button class="btn btn-link" data-action="download#close">キャンセル</button>
+        <a class="btn btn-primary" data-action="download#close" href="mailto:taniguchi@aiplugs.com?subject=元データダウンロード(meeemories)&body={{:body}}">希望のメールを送信する</a>
+      </div>
+    </div>
+  </script>
   <script>
     rg4js('apiKey', '8Ra6BNmK9jKdVW5lXUNYRQ==');
     rg4js('enableCrashReporting', true);
