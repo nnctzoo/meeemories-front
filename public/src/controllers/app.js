@@ -50,7 +50,9 @@ Meeemories.register("app", class extends Stimulus.Controller {
       fragment.firstElementChild.addEventListener('initialized', e => {
         const item = this.getController(e.target, 'uploading-item');
         item.selfLink = mine.url;
-        //item.watch();
+        if(hash==='#mypage') {
+          item.watch();
+        }
       });
       this.minesTarget.appendChild(fragment);
     }
