@@ -50,7 +50,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
       fragment.firstElementChild.addEventListener('initialized', e => {
         const item = this.getController(e.target, 'uploading-item');
         item.selfLink = mine.url;
-        item.watch();
+        //item.watch();
       });
       this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
     }
@@ -157,6 +157,11 @@ Meeemories.register("app", class extends Stimulus.Controller {
     }
     if (page === '#home') {
       this.tryLoad();
+    }
+    if (page === '#mypage') {
+      for(const item of this.children('uploading-item')) {
+        item.watch();
+      }
     }
   }
   go(e) {

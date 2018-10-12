@@ -101,6 +101,9 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.application.state.patch({myupload:removed});
   }
   watch() {
+    if (this.status == 'succeeded')
+      return;
+    
     fetch('https://api.meeemori.es' + this.selfLink, { mode:'cors', credentials: 'include' }).then(res => {
       if(res.ok) return res.json()
     }, _ => {
