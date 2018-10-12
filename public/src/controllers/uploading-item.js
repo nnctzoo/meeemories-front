@@ -101,10 +101,12 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.application.state.patch({myupload:removed});
   }
   watch() {
-    fetch('https://api.meeemori.es' + this.selfLink).then(res => res.json(), _ => {
+    fetch('https://api.meeemori.es' + this.selfLink).then(res => {
+      if(res.ok) return res.json()
+    }, _ => {
       this.removeFromStore();
     }).then(data => {
-      console.log(data);
+      if (!data) return;
       if (data.pending && !data.available) {
         this.status = 'converting';
       }
