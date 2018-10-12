@@ -11,9 +11,9 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     this.upload(file).then(data => {
       this.status = 'uploaded';
       this.selfLink = data.detail;
-      this.watch();
       const list = this.application.state.get('myupload') || [];
       this.application.state.patch({myupload:[{url: data.detail}].concat(list)});
+      this.watch();
     }).catch(() => {
       alert('アップロードに失敗しました。');
       this.element.remove();
