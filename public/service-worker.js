@@ -51,17 +51,14 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method.toUpperCase() !== 'GET') {
-    event.respondWith(fetch(event.request));
     return;
   }
 
   if (event.request.headers.get('Cache-Control') === 'no-cache') {
-    event.respondWith(fetch(event.request));
     return;
   }
 
-  if (event.request.method.toUpperCase() === 'GET' && event.request.url.startsWith('https://api.meeemori.es/')) {
-    event.respondWith(fetch(event.request));
+  if (event.request.url.startsWith('https://api.meeemori.es/')) {
     return;
   }
   
@@ -78,7 +75,7 @@ self.addEventListener('fetch', (event) => {
           if (!response)
             return response;
 
-          if (response.status !== 200 && response.type !== 'opaque')
+          if (response.status !== 200)
             return response;
           
           if (response.type !== 'basic' && response.type !== 'cors' && response.type !== 'opaque')
