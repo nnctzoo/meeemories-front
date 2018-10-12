@@ -76,12 +76,11 @@ Meeemories.register("app", class extends Stimulus.Controller {
     return fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
       if (res.ok)
         return res.json();
-      else
-        alert('エラーが発生しました。再度お試しください。')
     }, () => {
       alert('通信エラーが発生しました。\nネットワークをご確認の上、再度お試しください。')
     })
     .then(data => {
+      if (!data) return;
       return data.contents.map(d => {
         const pc = this.application.state.get('pc');
         const sources = d.sources.sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
