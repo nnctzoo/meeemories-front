@@ -11,11 +11,14 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       this.status = 'uploaded';
       this.selfLink = data.detail;
       this.watch();
+      const list = this.application.state.get('myupload') || [];
+      this.application.state.patch({myupload:[{url: data.detail}].concat(list)});
     }).catch(() => {
       alert('アップロードに失敗しました。');
       this.element.remove();
     });
   }
+  
   setThumb(file) {
     if (file.type.match('image')) {
       this.setThumbUrl(URL.createObjectURL(file));
@@ -92,13 +95,17 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     });
   }
   watch() {
-    fetch('https://api.meeemori.es' + this.selfLink).then(res => res.json()).then(data => {
+    fetch('https://api.meeemori.es' + this.selfLink).then(res => res.json(), _ => {
+      const list = this.application.state.get('myupload') || [];
+      const removed = list.filter(item => item.url !== this.selfLink)
+      this.application.state.patch({myupload:removed});
+    }).then(data => {
       console.log(data);
       if (data.pending && !data.available) {
         this.status = 'converting';
       }
       else if (!data.pending && data.available) {
-        this.status = 'succeeded';
+        this.status = 'succeeded'
         const sources = data.sources.filter(s => s.mime_type.startsWith('image')).sort((a, b) => a.width > b.width ? 1 : a.width < b.width ? -1 : 0);
         const url = sources.length >= 2 ? sources[sources.length - 2].url : sources.length > 0 ? sources[sources.length - 1].url : null;
         if (url) {

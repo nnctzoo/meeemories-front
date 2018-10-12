@@ -33,6 +33,23 @@ Meeemories.register("app", class extends Stimulus.Controller {
       }
     });
     this.application.state.patch({page: hash});
+
+    const myupload = JSON.parse(localStorage.getItem('myupload')||'[]');
+    this.application.state.patch({myupload:myupload});
+    this.application.state.subscribe('myupload',list => {
+      const json = JSON.stringify(list);
+      localStorage.setItem('myupload', json);
+    })
+    for(let mine of myupload) {
+      const template = document.querySelector('#uploading-tmpl').content;
+      const fragment = template.cloneNode(true);
+      fragment.firstElementChild.addEventListener('initialized', e => {
+        const item = this.getController(e.target, 'uploading-item');
+        item.selfLink = mine.url;
+        item.watch();
+      });
+      this.minesTarget.insertBefore(fragment, this.minesTarget.firstElementChild);
+    }
   }
   dispatchState() {
     this.application.state.patch({scroll: window.scrollY + window.innerHeight});
