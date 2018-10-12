@@ -113,6 +113,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
       if (!data) return;
       if (data.pending && !data.available) {
         this.status = 'converting';
+        this.progress = 100;
       }
       else if (!data.pending && data.available) {
         this.status = 'succeeded'
