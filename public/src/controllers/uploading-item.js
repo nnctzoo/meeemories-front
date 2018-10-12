@@ -67,6 +67,7 @@ Meeemories.register("uploading-item", class extends Stimulus.Controller {
     form.append('file', file);
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
       xhr.upload.onprogress = e => {
         if(e.lengthComputable) {
           this.progress = ~~((e.loaded / e.total) * 100);
