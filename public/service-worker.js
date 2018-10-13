@@ -61,6 +61,10 @@ self.addEventListener('fetch', (event) => {
   if (event.request.url.startsWith('https://api.meeemori.es/')) {
     return;
   }
+  if (event.request.url.startsWith('https://d1gj7hiu75b85u.cloudfront.net')) {
+    return;
+  }
+  
   
   const cacheKey = event.request.url;
   event.respondWith(
