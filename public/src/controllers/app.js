@@ -6,6 +6,17 @@ Meeemories.register("app", class extends Stimulus.Controller {
     this.listTarget.addEventListener('next', e => {
       this.tryLoad(e.detail);
     });
+    this.__preload = new Promise((resolve) => {
+      const iframe = document.createElement('iframe');
+      iframe.width = 0;
+      iframe.height = 0;
+      iframe.frameBorder = 0;
+      iframe.src = 'https://api.meeemori.es/contents';
+      iframe.onload = () => {
+        resolve();
+      }
+      document.body.appendChild(iframe)
+    });
     this.tryLoad();
 
     setTimeout(() => {
@@ -75,7 +86,8 @@ Meeemories.register("app", class extends Stimulus.Controller {
   }
   load (startIndex) {
     const url = !startIndex ? 'https://api.meeemori.es/contents' : 'https://api.meeemori.es/contents?before=' + startIndex;
-    return fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
+    return this.__preload.then(() => 
+    fetch(url,{ mode:'cors', credentials: 'include' }).then(res => {
       if (res.ok)
         return res.json();
     }, () => {
@@ -136,6 +148,7 @@ Meeemories.register("app", class extends Stimulus.Controller {
         this.list.nextLink = (data[data.length - 1].id);
       }
     })
+    )
   }
   toggleView() {
     this.isGridView = !this.isGridView;
