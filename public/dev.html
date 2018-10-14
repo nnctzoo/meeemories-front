@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dev</title>
+</head>
+<body>
+    <div id="view"></div>
+    <button onclick="laodJson()">LOAD</button>
+    <script>
+        
+        const p = new Promise((resolve) => {
+            const iframe = document.createElement('iframe');
+            iframe.width = 0;
+            iframe.height = 0;
+            iframe.frameBorder = 0;
+            iframe.src = 'https://meeemories.azurewebsites.net/medias';
+            iframe.onload = () => {
+                resolve();
+            }
+            document.body.appendChild(iframe)
+        });
+        function laodJson() {
+            p.then(() => {
+                fetch('https://meeemories.azurewebsites.net/medias',{mode:'cors',credentials:'include'}).then(res => {
+                    if (res.ok)
+                        return res.text();
+                    else
+                        alert('error');
+                }).then(json => {
+                    document.getElementById('view').innerText = json;
+                })
+            })
+        }
+    </script>
+</body>
+</html>
