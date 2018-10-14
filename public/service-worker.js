@@ -48,7 +48,7 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
-
+/*
 self.addEventListener('fetch', (event) => {
   if (event.request.method.toUpperCase() !== 'GET') {
     return;
@@ -104,3 +104,4 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+*/ 
